@@ -6,7 +6,7 @@
 
 int main(int argc, char * * argv) { 
   
-  // ensures there are 4 arguments given
+  // ensures there are 4 arguments given ***
   if (argc < 3) {
     fprintf(stderr, "ERROR: Arguments less than 4.\n");
     return EXIT_FAILURE;

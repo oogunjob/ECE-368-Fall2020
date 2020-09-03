@@ -33,7 +33,7 @@ long *Generate_2p3q_Seq(int length, int *seq_size){
   *seq_size = *seq_size - 1; // removes extra value from sequence size
   sequence = realloc(sequence, sizeof(*sequence) * (*seq_size)); // resizes the sequence array
   
-  bubbleSort(sequence, *seq_size); // sorts the sequence array in ascending order ***
+  bubbleSort(sequence, *seq_size); // sorts the sequence array in ascending order *** QuickSort ? ***
 
   return sequence; // returns the sequence array
 }
