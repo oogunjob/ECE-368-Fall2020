@@ -3,7 +3,7 @@ ERROR = -Wvla
 GCC = gcc -std=c99 -g $(WARNING) $(ERROR)
 VAL = valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
 
-SRCS = pa1.c shell_array.c shell_list.c
+SRCS = pa1.c shell_array.c
 OBJS = $(SRCS:%.c=%.o)
 
 pa1: $(OBJS)
@@ -15,7 +15,7 @@ pa1: $(OBJS)
 testall: test1 test2 test3 test4 test5
 
 test1: pa1
-	./pa1 -a examples/15.b output1a
+	./pa1 -a 15.b
 	# diff -w output1a examples/15sa.b
 	
 	# ./pa1 -l examples/15.b output1l
