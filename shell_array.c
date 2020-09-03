@@ -16,7 +16,7 @@ long * Array_Load_From_File(char *filename, int *size){
 
   // determines how long the file is
   fseek(file, 0, SEEK_END);
-  *size = ftell(file) / sizeof(long);
+  *size = ftell(file) / sizeof(long) / 2;
   fseek(file, 0, SEEK_SET);
 
   // creates a temporary array
@@ -33,7 +33,6 @@ long * Array_Load_From_File(char *filename, int *size){
 
 void Array_Shellsort(long *array, int size, long *n_comp){
   int sequenceSize = 0; // number of elements in the sequence
-  
   long * sequence = Generate_2p3q_Seq(size, &sequenceSize); // computes the Pratt sequence based on the size of the array
   
   
