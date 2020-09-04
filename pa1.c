@@ -16,7 +16,7 @@ int main(int argc, char * * argv) {
   if((strcmp("-a", argv[1])) == 0){
     int size = 0; // number of elements in the array
     long n_comp = 0; // number of comparisons counted
-	  int elements; // number of elements written to the file
+	  int elements = 0; // number of elements written to the file
 
 	  long * array = Array_Load_From_File(argv[2], &size); // loads the array from the file
     
@@ -30,14 +30,13 @@ int main(int argc, char * * argv) {
 	  
     elements = Array_Save_To_File(argv[3], array, size); // saves the elemments the file and returns the number of elements printed
 	
-// 	// if no elements are saved to the file, return EXIT_FAILURE
-// 	if(elements == NULL)
-// 	{
-// 	  free(array); // frees memory allocated for the array
-// 	  return EXIT_FAILURE; 
-// 	}
+    if(elements == 0){
+      // if no elements are saved to the file, returns EXIT_FAILURE
+      free(array); // frees memory allocated for the array
+      return EXIT_FAILURE; 
+    }
 
-// 	free(array); // frees memory allocated for the array
+    free(array); // frees memory allocated for the array
   }
 
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful

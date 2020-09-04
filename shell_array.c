@@ -59,7 +59,37 @@ void Array_Shellsort(long *array, int size, long *n_comp){
     }
   }
 
-  // fprintf(stdout, "Number of Comparsions Made: %ld\n", *n_comp);
+  for(int x = 0; x < 15; x++)
+    fprintf(stdout, "%ld ", array[x]);
+    
+  fprintf(stdout, "\n");
+  fprintf(stdout, "\nNumber of Comparsions Made: %ld\n", *n_comp);
 
   return;
+}
+
+int Array_Save_To_File(char *filename, long *array, int size)
+{
+  FILE * file = fopen(filename, "wb"); // file that will be written to
+
+  // if the array is empty, closes the file and returns EXIT FAILURE
+  if(array == NULL || size == 0)
+  {
+    fclose(file); // closes file
+	  return 0;
+  }
+
+  // writes elements of array to file
+  int elements = 0; // number of elements written to the file
+  int index; // index of elements in array
+
+  for(index = 0; index < size; index++)
+  {		
+    fwrite(&array[index], sizeof(long), 1, file);
+	  elements++; 
+  }
+	
+  fclose(file); // close the file
+
+  return elements; 
 }
