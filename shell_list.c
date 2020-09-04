@@ -90,8 +90,6 @@ Node * createNode()
 int List_Save_To_File(char *filename, Node *list)
 {
 
-  fprintf(stdout, "Test");
-
   FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
  
   // if the linked list is empty, closes the file and returns a count of no elements written

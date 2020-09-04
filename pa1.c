@@ -63,6 +63,8 @@ int main(int argc, char * * argv) {
       // add clause that deletes the linked list
       return EXIT_FAILURE; 
     }
+
+    fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output
   }
 
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful

@@ -13,14 +13,12 @@ pa1: $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: pa1
-	$(VAL) ./pa1 -a 15.b output1a
+	$(VAL) ./pa1 -l 15.b output1l
 
 testall: test1 test2 test3 test4 test5
 
 test1: pa1
 	./pa1 -a 15.b output1a
-	# diff -w output1a 15sa.b
-
 	./pa1 -l 15.b output1l
 
 test2: pa1
