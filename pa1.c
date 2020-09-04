@@ -7,7 +7,7 @@
 int main(int argc, char * * argv) { 
   
   // ensures there are 4 arguments given ***
-  if (argc < 4) {
+  if (argc < 3) {
     fprintf(stderr, "ERROR: Arguments less than 4.\n");
     return EXIT_FAILURE;
   }
@@ -20,7 +20,7 @@ int main(int argc, char * * argv) {
 
 	  long * array = Array_Load_From_File(argv[2], &size); // loads the array from the file
     
-	  // if the file could not be read return exit failure
+	  // if array remains empty, return EXIT_FAILURE
 	  if(array == NULL){
       fprintf(stderr, "ERROR: Array is NULL.\n");
 	    return EXIT_FAILURE; 
@@ -38,9 +38,37 @@ int main(int argc, char * * argv) {
 
     fprintf(stdout, "Elements Written: %d\n", elements);
     fprintf(stdout, "Number of Comparisons: %ld\n", n_comp);
-    
+
     free(array); // frees memory allocated for the array
   }
+
+  // runs shell sort for linked list
+  if((strcmp("-l", argv[1])) == 0){
+    long n_comp = 0; // number of comparisons counted
+	  int elements = 0; // number of elements written to the file
+
+    Node * list = List_Load_From_File(argv[2]); // loads linked list from file
+	  
+    // if linked list remains empty, return EXIT_FAILURE
+    if(list == NULL){
+      fprintf(stderr, "ERROR: Linked List is NULL.\n");
+	    return EXIT_FAILURE; 
+	  }
+
+    list = List_Shellsort(list, &n_comp); // performs shell sort on the linked and calcuates number of comparisons made
+
+  }
+
+
+
+
+
+
+
+
+
+
+
 
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful
 }

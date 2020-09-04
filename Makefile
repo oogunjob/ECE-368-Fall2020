@@ -3,7 +3,7 @@ ERROR = -Wvla
 GCC = gcc -std=c99 -g -O3 $(WARNING) $(ERROR)
 VAL = valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
 
-SRCS = pa1.c shell_array.c sequence.c
+SRCS = pa1.c shell_array.c shell_list.c sequence.c
 OBJS = $(SRCS:%.c=%.o)
 
 pa1: $(OBJS)
@@ -15,10 +15,10 @@ pa1: $(OBJS)
 testall: test1 test2 test3 test4 test5
 
 test1: pa1
-	./pa1 -a 15.b output1a
+	# ./pa1 -a 15.b output1a
 	# diff -w output1a 15sa.b
 	
-	# ./pa1 -l examples/15.b output1l
+	./pa1 -l 15.b
 	# diff -w output1l examples/15sl.b
 
 test2: pa1
@@ -36,17 +36,17 @@ test3: pa1
 	#diff -w output3l examples/10Ksl.b
 	
 test4: pa1
-	./pa1 -a examples/100K.b output4a
+	./pa1 -a 100K.b output4a
 	#diff -w output4a examples/100Ksa.b
 	
-	./pa1 -l examples/100K.b output4l
+	# ./pa1 -l 100K.b output4l
 	#diff -w output4l examples/100Ksl.b
 
 test5: pa1
-	./pa1 -a examples/1M.b output5a
+	./pa1 -a 1M.b output5a
 	#diff -w output5a examples/1Msa.b
 	
-	./pa1 -l examples/1M.b output5l
+	./pa1 -l 1M.b output5l
 	#diff -w output5l examples/1Msl.b
 
 clean: # remove all machine generated files

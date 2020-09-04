@@ -11,6 +11,7 @@ long * Array_Load_From_File(char *filename, int *size){
   if(file == NULL){	
     fprintf(stderr, "ERROR: File is NULL.\n");
     *size = 0;
+    fclose(file);
     return NULL;
   }
 
