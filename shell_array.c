@@ -60,14 +60,6 @@ void Array_Shellsort(long *array, int size, long *n_comp){
     }
   }
 
-  /*
-  for(int x = 0; x < 15; x++)
-    fprintf(stdout, "%ld ", array[x]);
-    
-  fprintf(stdout, "\n");
-  fprintf(stdout, "\nNumber of Comparsions Made: %ld\n", *n_comp);
-  */
-
   return;
 }
 
