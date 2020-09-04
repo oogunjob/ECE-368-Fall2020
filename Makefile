@@ -12,6 +12,9 @@ pa1: $(OBJS)
 .c.o:
 	$(GCC) $(TESTFLAGS) -c $*.c
 
+testmemory: pa1
+	$(VAL) ./pa1 -a 15.b output1a
+
 testall: test1 test2 test3 test4 test5
 
 test1: pa1

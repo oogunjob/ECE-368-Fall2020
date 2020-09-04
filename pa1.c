@@ -7,7 +7,7 @@
 int main(int argc, char * * argv) { 
   
   // ensures there are 4 arguments given ***
-  if (argc < 3) {
+  if (argc < 4) {
     fprintf(stderr, "ERROR: Arguments less than 4.\n");
     return EXIT_FAILURE;
   }
@@ -36,7 +36,7 @@ int main(int argc, char * * argv) {
       return EXIT_FAILURE; 
     }
 
-    fprintf(stdout, "%ld\n", n_comp);
+    fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output
 
     free(array); // frees memory allocated for the array
   }
@@ -55,7 +55,7 @@ int main(int argc, char * * argv) {
 	  }
 
     list = List_Shellsort(list, &n_comp); // performs shell sort on the linked and calcuates number of comparisons made
-
+    
   }
 
 
