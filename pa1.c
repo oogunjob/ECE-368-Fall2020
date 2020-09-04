@@ -7,7 +7,7 @@
 int main(int argc, char * * argv) { 
   
   // ensures there are 4 arguments given ***
-  if (argc < 3) {
+  if (argc < 4) {
     fprintf(stderr, "ERROR: Arguments less than 4.\n");
     return EXIT_FAILURE;
   }
@@ -27,8 +27,8 @@ int main(int argc, char * * argv) {
 	  }
 	
     Array_Shellsort(array, size, &n_comp); // performs shell sort on the array and calcuates number of comparisons made
-	
-//     elements = Array_Save_To_File(argv[3], array, size); // saves the elemments the file and returns the number of elements printed
+	  
+    elements = Array_Save_To_File(argv[3], array, size); // saves the elemments the file and returns the number of elements printed
 	
 // 	// if no elements are saved to the file, return EXIT_FAILURE
 // 	if(elements == NULL)

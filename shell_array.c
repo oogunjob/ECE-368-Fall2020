@@ -22,7 +22,7 @@ long * Array_Load_From_File(char *filename, int *size){
   // creates a temporary array
   long * temp = malloc(sizeof(*temp) * (*size));
 
-  // Stores integers from files into the array
+  // stores integers from files into the array
   for(int index = 0; index < *size; index++){
     fread(&temp[index], sizeof(long), 1, file);
   }
@@ -33,15 +33,33 @@ long * Array_Load_From_File(char *filename, int *size){
 
 void Array_Shellsort(long *array, int size, long *n_comp){
   int sequenceSize = 0; // number of elements in the sequence
-  long * sequence = Generate_2p3q_Seq(size, &sequenceSize); // computes Pratt's sequence based on the size of the array
+  long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // computes Pratt's sequence based on the size of the array
   
-  // need to add a clause if the sequence is empty or sequenceSize is still 0
-  // time to actually sort :/ 
+  // need to add a clause if the sequence is empty or sequenceSize is still 0 ***
 
-
+  int count = 1; // loop control variable that determines value of k
+  int k; // sequence control variable
+  int i; // loop control variable for comparison
+  long temp_r; // temporary number
   
+  // shell sort Implementation
+  for(count = (sequenceSize - 1); count >= 0; count--){
+    k = sequence[count]; // selects the value of k from sequence array
+  
+    for(int j = k; j <= (size - 1); j++){
+      temp_r = array[j];
+      i = j;
 
+      while(i >= k && array[i - k] > temp_r){
+        *n_comp += 1; // increments the number of comparisons made
+        array[i] = array[i - k];
+        i = i - k;
+      }
+      array[i] = temp_r;
+    }
+  }
 
+  // fprintf(stdout, "Number of Comparsions Made: %ld\n", *n_comp);
 
   return;
 }
