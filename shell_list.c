@@ -38,8 +38,7 @@ Node * List_Load_From_File(char * filename){
   return head; // returns the head of the list
 }
 
-Node *List_Shellsort(Node *list, long *n_comp){
-  
+Node *List_Shellsort(Node *list, long *n_comp){ 
   int size = 0;  // size of the linked list
   Node* current = list;  // head of the linked list
   
@@ -53,6 +52,8 @@ Node *List_Shellsort(Node *list, long *n_comp){
   int sequenceSize = 0; // number of elements in the sequence
   long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // computes Pratt's sequence based on the size of the linked list
 
+
+  free(sequence); // frees the sequence array
   return list; 
 }
 
@@ -126,9 +127,8 @@ int List_Save_To_File(char *filename, Node *list)
     current = next; 
   } 
   
-  list = NULL;
+  list = NULL; // ensures list is empty
   
   fclose(file); // closes the file
-
   return elements;
 }

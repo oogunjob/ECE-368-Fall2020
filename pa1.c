@@ -1,11 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h> // *** remove later
 #include "shell_array.h"
 #include "shell_list.h"
 
 int main(int argc, char * * argv) { 
   
+  // Calculate the time taken by fun() 
+  clock_t t; 
+  t = clock(); 
+
+
+
   // ensures there are 4 arguments given ***
   if (argc < 4) {
     fprintf(stderr, "ERROR: Arguments less than 4.\n");
@@ -66,6 +73,11 @@ int main(int argc, char * * argv) {
 
     fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output
   }
+
+  t = clock() - t; 
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
+  
+  fprintf(stdout, "Program took %f seconds to execute.\n\n", time_taken); 
 
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful
 }

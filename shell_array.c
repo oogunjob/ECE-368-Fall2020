@@ -43,7 +43,7 @@ void Array_Shellsort(long *array, int size, long *n_comp){
   int i; // loop control variable for comparison
   long temp_r; // temporary number
   
-  // shell sort Implementation
+  // shell sort implementation
   for(count = (sequenceSize - 1); count >= 0; count--){
     k = sequence[count]; // selects the value of k from sequence array
   
