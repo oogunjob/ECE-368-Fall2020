@@ -16,23 +16,23 @@ testall: test1 test2 test3 test4 test5
 
 test1: pa1
 	./pa1 -a 15.b output1a
-	diff -w output1a 15sa.b
+	# diff -w output1a 15sa.b
 	
 	# ./pa1 -l examples/15.b output1l
 	# diff -w output1l examples/15sl.b
 
 test2: pa1
-	./pa1 -a 1K.b
+	./pa1 -a 1K.b output2a
 	# diff -w output2a examples/1Ksa.b
 	
-	./pa1 -l examples/1K.b output2l
-	diff -w output2l examples/1Ksl.b	
+	# ./pa1 -l examples/1K.b output2l
+	# diff -w output2l examples/1Ksl.b	
 
 test3: pa1
-	./pa1 -a examples/10K.b output3a
+	./pa1 -a 10K.b output3a
 	#diff -w output3a examples/10Ksa.b
 	
-	./pa1 -l examples/10K.b output3l
+	# ./pa1 -l 10K.b output3l
 	#diff -w output3l examples/10Ksl.b
 	
 test4: pa1
