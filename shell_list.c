@@ -11,7 +11,7 @@ Node * List_Load_From_File(char * filename){
   
   if(file == NULL){
     fprintf(stderr, "ERROR: File is NULL.\n");
-	fclose(file); // closes file
+	  fclose(file); // closes file
     return NULL; // returns NULL value back to node
   }
 

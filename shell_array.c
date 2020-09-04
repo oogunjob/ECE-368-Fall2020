@@ -17,7 +17,7 @@ long * Array_Load_From_File(char *filename, int *size){
 
   // determines how long the file is
   fseek(file, 0, SEEK_END);
-  *size = ftell(file) / sizeof(long) / 2;
+  *size = ftell(file) / sizeof(long);
   fseek(file, 0, SEEK_SET);
 
   // creates a temporary array

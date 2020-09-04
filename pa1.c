@@ -36,8 +36,7 @@ int main(int argc, char * * argv) {
       return EXIT_FAILURE; 
     }
 
-    fprintf(stdout, "Elements Written: %d\n", elements);
-    fprintf(stdout, "Number of Comparisons: %ld\n", n_comp);
+    fprintf(stdout, "%ld\n", n_comp);
 
     free(array); // frees memory allocated for the array
   }

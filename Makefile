@@ -15,11 +15,8 @@ pa1: $(OBJS)
 testall: test1 test2 test3 test4 test5
 
 test1: pa1
-	# ./pa1 -a 15.b output1a
+	./pa1 -a 15.b output1a
 	# diff -w output1a 15sa.b
-	
-	./pa1 -l 15.b
-	# diff -w output1l examples/15sl.b
 
 test2: pa1
 	./pa1 -a 1K.b output2a
