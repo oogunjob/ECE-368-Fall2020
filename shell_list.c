@@ -86,3 +86,51 @@ Node * createNode()
  
   return temp; //returns the new node
 }
+
+int List_Save_To_File(char *filename, Node *list)
+{
+
+  fprintf(stdout, "Test");
+
+  FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
+ 
+  // if the linked list is empty, closes the file and returns a count of no elements written
+  if(list == NULL)
+  {
+    fclose(file);
+    return 0;
+  }
+ 
+  // writes elements of array to file
+  int elements = 0; // number of elements written to the file
+  
+  Node * temp = list; // temporary position in linked list
+  long value; // value of the node in linked list
+  
+  while(temp != NULL)
+  {
+	// writes the value stored in linked list to the file
+	value = temp -> value;
+	fwrite(&value, sizeof(long), 1, file);   
+	temp = temp -> next;
+	
+	elements++; // increments number of iterations
+  }
+ 
+  // deletion of linked list process
+  Node * current = list; // current position in linked list
+  Node * next; // next node from current node in linked list
+  
+  while(current != NULL)  
+  { 
+    next = current -> next; 
+    free(current); 
+    current = next; 
+  } 
+  
+  list = NULL;
+  
+  fclose(file); // closes the file
+
+  return elements;
+}

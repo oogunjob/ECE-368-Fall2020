@@ -56,18 +56,14 @@ int main(int argc, char * * argv) {
 
     list = List_Shellsort(list, &n_comp); // performs shell sort on the linked and calcuates number of comparisons made
     
+    elements = List_Save_To_File(argv[3], list); // saves the elemments the file and returns the number of elements printed
+	
+    if(elements == 0){
+      // if no elements are saved to the file, returns EXIT_FAILURE
+      // add clause that deletes the linked list
+      return EXIT_FAILURE; 
+    }
   }
-
-
-
-
-
-
-
-
-
-
-
 
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful
 }

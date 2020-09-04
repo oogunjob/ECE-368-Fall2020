@@ -60,15 +60,15 @@ void Array_Shellsort(long *array, int size, long *n_comp){
     }
   }
 
-  free(sequence);
+  free(sequence); // frees the sequence array
   return;
 }
 
 int Array_Save_To_File(char *filename, long *array, int size)
 {
-  FILE * file = fopen(filename, "wb"); // binary file that will be written to
+  FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
 
-  // if the array is empty, closes the file and returns EXIT FAILURE
+  // if the array is empty, closes the file and returns a count of no elements written
   if(array == NULL || size == 0)
   {
     fclose(file); // closes file
