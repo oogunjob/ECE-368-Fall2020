@@ -60,6 +60,7 @@ void Array_Shellsort(long *array, int size, long *n_comp){
     }
   }
 
+  free(sequence);
   return;
 }
 
