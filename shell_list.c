@@ -6,6 +6,22 @@
 
 static Node * addNode(Node * head, long value);
 static Node * createNode();
+static Node * getNode(Node * head, int index);
+
+/* Takes head pointer of the linked list and index 
+    as arguments and return data at index*/
+Node * getNode(Node *head, int index){ 
+  int count = 0; 
+  
+  //if count equal too n return node->data 
+  if(count == index){ 
+    return head; 
+  }
+      
+  //recursively decrease n and increase  
+  // head to next pointer  
+  return getNode(head-> next, index - 1);  
+} 
 
 Node * List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
@@ -20,7 +36,7 @@ Node * List_Load_From_File(char * filename){
  
   // Determines the amount of nodes for the file
   fseek(file, 0, SEEK_END);
-  size = ftell(file) / sizeof(long) / 2;
+  size = ftell(file) / sizeof(long);
   fseek(file, 0, SEEK_SET);
 
   long value; // the value read from the file 
@@ -45,17 +61,38 @@ Node *List_Shellsort(Node *list, long *n_comp){
   // counts the number of nodes in the linked list
   while (current != NULL){ 
     size++; // increments count of size
-    current = current->next; // positions to next node in the linked list
+    current = current -> next; // positions to next node in the linked list
   } 
 
   int sequenceSize = 0; // number of elements in the sequence
   long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the linked list
 
   // need to implement shell sort of linked list here
+  // need to add a clause if the sequence is empty or sequenceSize is still 0 ***
+
+  int count = 1; // loop control variable that determines value of k
+  int k; // sequence control variable
+  int i; // loop control variable for comparison
+  long temp_r; // temporary number
   
+  // shell sort implementation
+  for(count = (sequenceSize - 1); count >= 0; count--){
+    k = sequence[count]; // selects the value of k from sequence array
+  
+    for(int j = k; j <= (size - 1); j++){
+      temp_r = getNode(list, j) -> value;
+      i = j;
 
+      while(i >= k && getNode(list, i - k) -> value > temp_r){
+        *n_comp += 1; // increments the number of comparisons made
+        getNode(list, i) -> value = getNode(list, i - k) -> value;
+        i = i - k;
+      }
+      getNode(list, i) -> value = temp_r;
+    }
+  }
 
-
+  fprintf(stdout, "Test");
   free(sequence); // frees the sequence array
   return list; 
 }
