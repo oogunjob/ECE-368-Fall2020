@@ -34,7 +34,7 @@ long * Array_Load_From_File(char *filename, int *size){
 
 void Array_Shellsort(long *array, int size, long *n_comp){
   int sequenceSize = 0; // number of elements in the sequence
-  long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // computes Pratt's sequence based on the size of the array
+  long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the array
   
   // need to add a clause if the sequence is empty or sequenceSize is still 0 ***
 

@@ -7,13 +7,11 @@
 
 int main(int argc, char * * argv) { 
   
-  // Calculate the time taken by fun() 
+  // calculates the time taken by program
   clock_t t; 
   t = clock(); 
 
-
-
-  // ensures there are 4 arguments given ***
+  // ensures there are 4 arguments given
   if (argc < 4) {
     fprintf(stderr, "ERROR: Arguments less than 4.\n");
     return EXIT_FAILURE;
@@ -75,9 +73,8 @@ int main(int argc, char * * argv) {
   }
 
   t = clock() - t; 
-  double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds 
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
   
   fprintf(stdout, "Program took %f seconds to execute.\n\n", time_taken); 
-
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful
 }

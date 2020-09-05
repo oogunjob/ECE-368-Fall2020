@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "shell_list.h"
 #include "sequence.h"
+#include "list_of_list.h"
 
 static Node * addNode(Node * head, long value);
 static Node * createNode();
@@ -34,7 +35,6 @@ Node * List_Load_From_File(char * filename){
   }
 
   fclose(file); // closes the file
-
   return head; // returns the head of the list
 }
 
@@ -43,14 +43,17 @@ Node *List_Shellsort(Node *list, long *n_comp){
   Node* current = list;  // head of the linked list
   
   // counts the number of nodes in the linked list
-  while (current != NULL) 
-  { 
+  while (current != NULL){ 
     size++; // increments count of size
     current = current->next; // positions to next node in the linked list
   } 
 
   int sequenceSize = 0; // number of elements in the sequence
-  long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // computes Pratt's sequence based on the size of the linked list
+  long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the linked list
+
+  // need to implement shell sort of linked list here
+  
+
 
 
   free(sequence); // frees the sequence array
@@ -80,22 +83,18 @@ Node * addNode(Node * head, long value){
    return head; // returns head of linked list
 }
 
-Node * createNode() 
-{
+Node * createNode(){
   Node * temp = malloc(sizeof(*temp)); // allocates new memory for node
   temp -> next = NULL; // next of temp points to NULL
  
   return temp; //returns the new node
 }
 
-int List_Save_To_File(char *filename, Node *list)
-{
-
+int List_Save_To_File(char *filename, Node *list){
   FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
  
   // if the linked list is empty, closes the file and returns a count of no elements written
-  if(list == NULL)
-  {
+  if(list == NULL){
     fclose(file);
     return 0;
   }
@@ -106,8 +105,7 @@ int List_Save_To_File(char *filename, Node *list)
   Node * temp = list; // temporary position in linked list
   long value; // value of the node in linked list
   
-  while(temp != NULL)
-  {
+  while(temp != NULL){
 	// writes the value stored in linked list to the file
 	value = temp -> value;
 	fwrite(&value, sizeof(long), 1, file);   
@@ -120,8 +118,7 @@ int List_Save_To_File(char *filename, Node *list)
   Node * current = list; // current position in linked list
   Node * next; // next node from current node in linked list
   
-  while(current != NULL)  
-  { 
+  while(current != NULL){ 
     next = current -> next; 
     free(current); 
     current = next; 
