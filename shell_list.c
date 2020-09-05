@@ -6,7 +6,7 @@
 
 static Node * addNode(Node * head, long value);
 static Node * createNode();
-static Node * getNode(Node * head, int index);
+static Node * getNode(Node * head, int index); // ***
 
 /* Takes head pointer of the linked list and index 
     as arguments and return data at index*/
@@ -75,7 +75,7 @@ Node *List_Shellsort(Node *list, long *n_comp){
   int i; // loop control variable for comparison
   long temp_r; // temporary number
   
-  // shell sort implementation
+  // shell sort implementation (too slow)
   for(count = (sequenceSize - 1); count >= 0; count--){
     k = sequence[count]; // selects the value of k from sequence array
   
@@ -92,7 +92,6 @@ Node *List_Shellsort(Node *list, long *n_comp){
     }
   }
 
-  fprintf(stdout, "Test");
   free(sequence); // frees the sequence array
   return list; 
 }
