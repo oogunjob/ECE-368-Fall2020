@@ -75,6 +75,6 @@ int main(int argc, char * * argv) {
   t = clock() - t; 
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
   
-  fprintf(stdout, "Program took %f seconds to execute.\n\n", time_taken); 
+  fprintf(stdout, "Program took %f seconds to execute.\n\n", time_taken); // *** need to remove
   return EXIT_SUCCESS; // return EXIT_SUCCESS is program is successful
 }

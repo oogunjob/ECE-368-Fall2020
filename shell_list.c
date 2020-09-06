@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include "shell_list.h"
 #include "sequence.h"
-#include "list_of_list.h"
+#include "list_of_list.h" // ** might remove
 
 static Node * addNode(Node * head, long value);
 static Node * createNode();
-static Node * getNode(Node * head, int index); // ***
+static Node * getNode(Node * head, int index); // *** need to remove
 
 /* Takes head pointer of the linked list and index 
     as arguments and return data at index*/
