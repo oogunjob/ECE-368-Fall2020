@@ -70,6 +70,13 @@ Node *List_Shellsort(Node *list, long *n_comp){
   // need to implement shell sort of linked list here
   // need to add a clause if the sequence is empty or sequenceSize is still 0 ***
 
+  // given the number in the sequence will determine how many lists I need to create
+  
+  //List * headList = malloc(sizeof(*headList)); // list of lists
+  //headList -> next = NULL; // points to an empty list
+  
+  //int listSize; // numbers of lists within the list of lists
+
   int count = 1; // loop control variable that determines value of k
   int k; // sequence control variable
   int i; // loop control variable for comparison
@@ -78,6 +85,15 @@ Node *List_Shellsort(Node *list, long *n_comp){
   // shell sort implementation (too slow)
   for(count = (sequenceSize - 1); count >= 0; count--){
     k = sequence[count]; // selects the value of k from sequence array
+
+    // following code is for testing the size of the list
+    // listSize = 1; // resets count of lists within head list to 1
+
+    // while(headList -> next){
+      // listSize++;
+    // }
+
+    // end of testing of list of lists
   
     for(int j = k; j <= (size - 1); j++){
       temp_r = getNode(list, j) -> value;
@@ -92,6 +108,7 @@ Node *List_Shellsort(Node *list, long *n_comp){
     }
   }
 
+  // fprintf("Number of Lists within list of lists: %d\n", listSize);
   free(sequence); // frees the sequence array
   return list; 
 }
