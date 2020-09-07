@@ -6,7 +6,6 @@
 #include "shell_array.h"
 
 int main(int argc, char * * argv) { 
-  
   // calculates the time taken by program
   clock_t t; 
   t = clock(); 

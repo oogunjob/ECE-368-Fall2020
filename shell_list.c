@@ -7,13 +7,12 @@
 
 static void push(Node ** head, long value);
 
-static List * addList(List * head);
-static List * createList();
+static List * addList(List * head); // *** probably won't need
+static List * createList(); // *** probably won't need
 
 static Node * getNode(Node * head, int index); // *** need to remove
 
 Node * List_Load_From_File(char * filename){
-
   // calculates the time taken by function
   clock_t t; 
   t = clock(); 
@@ -25,13 +24,6 @@ Node * List_Load_From_File(char * filename){
 	  fclose(file); // closes file
     return NULL; // returns NULL value back to node
   }
-
-  int size; // number of elements in the file
- 
-  // Determines the amount of nodes for the file
-  fseek(file, 0, SEEK_END);
-  size = ftell(file) / sizeof(long);
-  fseek(file, 0, SEEK_SET);
 
   long value; // the value read from the file 
  
@@ -51,8 +43,7 @@ Node * List_Load_From_File(char * filename){
   return head; // returns the head of the list
 }
 
-Node *List_Shellsort(Node *list, long *n_comp){ 
-
+Node *List_Shellsort(Node *list, long *n_comp){
   // calculates the time taken by function
   clock_t t; 
   t = clock(); 
@@ -114,17 +105,12 @@ Node *List_Shellsort(Node *list, long *n_comp){
 }
 
 void push(Node ** head, long value){
-  /* 1. allocate node */
-  Node * new_node = malloc(sizeof(*new_node)); 
+  Node * node = malloc(sizeof(*node)); // allocates memory for new node
+  node -> value = value; // adds the given value to the node's value
   
-  /* 2. put in the data  */
-  new_node->value   = value; 
+  node -> next = (*head); // makes new node the head of the linked list
   
-  /* 3. Make next of new node as head */
-  new_node->next = (*head); 
-  
-  /* 4. move the head to point to the new node */
-  (*head) = new_node; 
+  (*head) = node; // moves the head to point to the new node
 } 
 
 List * addList(List * head){
@@ -170,7 +156,6 @@ Node * getNode(Node *head, int index){
 } 
 
 int List_Save_To_File(char *filename, Node *list){
-
   // calculates the time taken by function
   clock_t t; 
   t = clock(); 
