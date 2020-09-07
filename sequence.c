@@ -2,10 +2,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sequence.h"
+#include <time.h>
+
 static void bubbleSort(long * array, long size);
 static void swap(long * x, long * y);
 
 long *Generate_2p3q_Seq(int length, int *seq_size){
+
+  // calculates the time taken by function
+  clock_t t; 
+  t = clock(); 
 
   // if length contains 0 or 1 elements, returns a size of 0 and empty sequence
   if(length < 2){
@@ -34,7 +40,12 @@ long *Generate_2p3q_Seq(int length, int *seq_size){
   sequence = realloc(sequence, sizeof(*sequence) * (*seq_size)); // resizes the sequence array
   
   bubbleSort(sequence, *seq_size); // sorts the sequence array in ascending order *** QuickSort ? ***
-
+  
+  t = clock() - t; 
+  double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
+  
+  fprintf(stdout, "Function: Sequence took %f seconds to execute.\n", time_taken); // *** need to remove
+  
   return sequence; // returns the sequence array
 }
 

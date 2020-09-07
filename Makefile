@@ -22,14 +22,14 @@ test1: pa1
 	# diff -w output1a 15sa.b
 
 	./pa1 -l 15.b output1l
-	#diff -w output1l 15sl.b
+	diff -w output1l 15sl.b
 
 test2: pa1
 	# ./pa1 -a 1K.b output2a
 	# diff -w output2a 1Ksa.b
 
 	./pa1 -l 1K.b output2l
-	# diff -w output2l 1Ksl.b	
+	diff -w output2l 1Ksl.b	
 
 test3: pa1
 	# ./pa1 -a 10K.b output3a
@@ -42,7 +42,7 @@ test4: pa1
 	./pa1 -l 100K.b output4l
 
 test5: pa1
-	# ./pa1 -a 1M.b output5a
+	#./pa1 -a 1M.b output5a
 
 	./pa1 -l 1M.b outputla
 
