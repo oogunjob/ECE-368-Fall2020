@@ -6,22 +6,9 @@
 
 static Node * addNode(Node * head, long value);
 static Node * createNode();
-static Node * getNode(Node * head, int index); // *** need to remove
 
-/* Takes head pointer of the linked list and index 
-    as arguments and return data at index*/
-Node * getNode(Node *head, int index){ 
-  int count = 0; 
-  
-  //if count equal too n return node->data 
-  if(count == index){ 
-    return head; 
-  }
-      
-  //recursively decrease n and increase  
-  // head to next pointer  
-  return getNode(head-> next, index - 1);  
-} 
+static List * addList(List * head);
+static List * createList();
 
 Node * List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
@@ -70,45 +57,38 @@ Node *List_Shellsort(Node *list, long *n_comp){
   // need to implement shell sort of linked list here
   // need to add a clause if the sequence is empty or sequenceSize is still 0 ***
 
-  // given the number in the sequence will determine how many lists I need to create
-  
-  //List * headList = malloc(sizeof(*headList)); // list of lists
-  //headList -> next = NULL; // points to an empty list
-  
-  //int listSize; // numbers of lists within the list of lists
-
   int count = 1; // loop control variable that determines value of k
   int k; // sequence control variable
   int i; // loop control variable for comparison
   long temp_r; // temporary number
   
+  // given the number in the sequence will determine how many lists I need to create
+  List * head = NULL; // list of lists
+
+  int listSize = 0; // numbers of lists within the list of lists
+
+  // // creates sequence[sequenceSize - 1] sublists in the list of lists
+  // for(listSize = 0; listSize < sequence[sequenceSize - 1]; listSize++){
+  //   head = addList(head);
+  // }
+
   // shell sort implementation (too slow)
-  for(count = (sequenceSize - 1); count >= 0; count--){
-    k = sequence[count]; // selects the value of k from sequence array
-
-    // following code is for testing the size of the list
-    // listSize = 1; // resets count of lists within head list to 1
-
-    // while(headList -> next){
-      // listSize++;
-    // }
-
-    // end of testing of list of lists
+  // for(count = (sequenceSize - 1); count >= 0; count--){
+  //   k = sequence[count]; // selects the value of k from sequence array
   
-    for(int j = k; j <= (size - 1); j++){
-      temp_r = getNode(list, j) -> value;
-      i = j;
+  //   for(int j = k; j <= (size - 1); j++){
+  //     temp_r = getNode(list, j) -> value;
+  //     i = j;
 
-      while(i >= k && getNode(list, i - k) -> value > temp_r){
-        *n_comp += 1; // increments the number of comparisons made
-        getNode(list, i) -> value = getNode(list, i - k) -> value;
-        i = i - k;
-      }
-      getNode(list, i) -> value = temp_r;
-    }
-  }
+  //     while(i >= k && getNode(list, i - k) -> value > temp_r){
+  //       *n_comp += 1; // increments the number of comparisons made
+  //       getNode(list, i) -> value = getNode(list, i - k) -> value;
+  //       i = i - k;
+  //     }
+  //     getNode(list, i) -> value = temp_r;
+  //   }
+  // }
 
-  // fprintf("Number of Lists within list of lists: %d\n", listSize);
   free(sequence); // frees the sequence array
   return list; 
 }
@@ -136,11 +116,44 @@ Node * addNode(Node * head, long value){
    return head; // returns head of linked list
 }
 
+List * addList(List * head){
+  // creation of lists 
+  List * temp; // temporary list
+  List * p; // position list
+  temp = createList(); // creates temporary list
+ 
+  if(head == NULL){
+    head = temp; // when linked list is empty
+  }
+
+  else{ 
+    p = head; //assign head to p
+    while(p -> next != NULL){
+      p = p -> next; //traverse the list until p is the last list.The last list always points to NULL
+    }
+
+    p -> next = temp; // point the previous last list to the new list created
+  }
+
+   return head; // returns head of linked list
+}
+
+
+
+
+
 Node * createNode(){
   Node * temp = malloc(sizeof(*temp)); // allocates new memory for node
   temp -> next = NULL; // next of temp points to NULL
  
   return temp; //returns the new node
+}
+
+List * createList(){
+  List * temp = malloc(sizeof(*temp)); // allocates new memory for list
+  temp -> next = NULL; // next of temp points to NULL
+ 
+  return temp; //returns the new list
 }
 
 int List_Save_To_File(char *filename, Node *list){
