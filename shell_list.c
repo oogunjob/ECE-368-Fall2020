@@ -6,9 +6,7 @@
 #include "list_of_list.h"
 
 static void push(Node ** head, long value);
-
-static List * addList(List * head); // *** probably won't need
-static List * createList(); // *** probably won't need
+static void pushList(List ** head);
 
 static Node * getNode(Node * head, int index); // *** need to remove
 
@@ -69,14 +67,14 @@ Node *List_Shellsort(Node *list, long *n_comp){
   long temp_r; // temporary number
   
   // given the number in the sequence will determine how many lists I need to create
-  List * head = NULL; // list of lists
+  List * head = NULL; // list of lists *** may need to remove
 
-  int listSize = 0; // numbers of lists within the list of lists
+  int listSize = 0; // numbers of lists within the list of lists *** may need to remove
 
-  // // creates sequence[sequenceSize - 1] sublists in the list of lists
-  // for(listSize = 0; listSize < sequence[sequenceSize - 1]; listSize++){
-  //   head = addList(head);
-  // }
+  // creates sequence[sequenceSize - 1] sublists in the list of lists
+  for(listSize = 0; listSize < sequence[sequenceSize - 1]; listSize++){
+    pushList(&head);
+  }
 
   // shell sort implementation (too slow)
   for(count = (sequenceSize - 1); count >= 0; count--){
@@ -113,34 +111,13 @@ void push(Node ** head, long value){
   (*head) = node; // moves the head to point to the new node
 } 
 
-List * addList(List * head){
-  // creation of lists 
-  List * temp; // temporary list
-  List * p; // position list
-  temp = createList(); // creates temporary list
- 
-  if(head == NULL){
-    head = temp; // when linked list is empty
-  }
-
-  else{ 
-    p = head; //assign head to p
-    while(p -> next != NULL){
-      p = p -> next; //traverse the list until p is the last list.The last list always points to NULL
-    }
-
-    p -> next = temp; // point the previous last list to the new list created
-  }
-
-   return head; // returns head of linked list
-}
-
-List * createList(){
-  List * temp = malloc(sizeof(*temp)); // allocates new memory for list
-  temp -> next = NULL; // next of temp points to NULL
- 
-  return temp; //returns the new list
-}
+void pushList(List ** head){
+  List * list = malloc(sizeof(*list)); // allocates memory for new node
+  
+  list -> next = (*head); // makes new node the head of the linked list
+  
+  (*head) = list; // moves the head to point to the new node
+} 
 
 Node * getNode(Node *head, int index){ 
   int count = 0; 
@@ -150,8 +127,7 @@ Node * getNode(Node *head, int index){
     return head; 
   }
       
-  //recursively decrease n and increase  
-  // head to next pointer  
+  //recursively decrease n and increase head to next pointer  
   return getNode(head-> next, index - 1);  
 } 
 
