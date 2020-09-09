@@ -36,6 +36,7 @@ int main(int argc, char * * argv) {
 	
     if(elements == 0){
       // if no elements are saved to the file, returns EXIT_FAILURE
+      fprintf(stderr, "ERROR: No elements were written to output file.\n");
       free(array); // frees memory allocated for the array
       return EXIT_FAILURE; 
     }
@@ -64,7 +65,18 @@ int main(int argc, char * * argv) {
 	
     if(elements == 0){
       // if no elements are saved to the file, returns EXIT_FAILURE
-      // add clause that deletes the linked list
+      fprintf(stderr, "ERROR: No elements were written to output file.\n");
+      
+      // deletion of linked list
+      Node * current = list; // current position in linked list
+      Node * next; // next node from current node in linked list
+  
+      while(current != NULL){ 
+        next = current -> next; 
+        free(current); 
+        current = next; 
+      } 
+
       return EXIT_FAILURE; 
     }
 

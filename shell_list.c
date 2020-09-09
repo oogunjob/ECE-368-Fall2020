@@ -86,19 +86,20 @@ Node *List_Shellsort(Node *list, long *n_comp){
   for(count = (sequenceSize - 1); count >= 0; count--){
     k = sequence[count]; // selects the value of k from sequence array 
   
-    // for(i = 0; i < k; i++){
-    //   for(int j = i; j < size; j += k){
-    //     // push(&currentHead, getNode(list, j) -> value);
-    //     // fprintf(stdout, "%ld -> ", currentHead -> value);
-    //     fprintf(stdout, "")
-    //   }
-    //   // bubblesort(currentHead);
-    //   currentHead = currentList -> next -> node;
-    //   // fprintf(stdout, "\n");
-    // }
-    // // fprintf(stdout, "\n\n");
+    for(int j = k; j <= (size - 1); j++){
+      temp_r = getNode(list, j) -> value;
+      i = j;
+
+      while(i >= k && getNode(list, i - k) -> value > temp_r){
+        *n_comp += 1; // increments the number of comparisons made
+        getNode(list, i) -> value = getNode(list, i - k) -> value;
+        i = i - k;
+      }
+      getNode(list, i) -> value = temp_r;
+    }
   }
-  bubblesort(list);
+
+  // bubblesort(list);
 
   t = clock() - t; 
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
@@ -178,7 +179,7 @@ int List_Save_To_File(char *filename, Node *list){
 	elements++; // increments number of iterations
   }
  
-  // deletion of linked list process
+  // deletion of linked list
   Node * current = list; // current position in linked list
   Node * next; // next node from current node in linked list
   
@@ -187,8 +188,6 @@ int List_Save_To_File(char *filename, Node *list){
     free(current); 
     current = next; 
   } 
-  
-  list = NULL; // ensures list is empty
   
   t = clock() - t; 
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
