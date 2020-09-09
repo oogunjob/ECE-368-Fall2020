@@ -7,6 +7,8 @@
 
 static void push(Node ** head, long value);
 static void pushList(List ** head);
+static void bubblesort(Node * head);
+static void swap(Node *a, Node *b);
 
 static Node * getNode(Node * head, int index); // *** need to remove
 
@@ -75,34 +77,51 @@ Node *List_Shellsort(Node *list, long *n_comp){
   for(listSize = 0; listSize < sequence[sequenceSize - 1]; listSize++){
     pushList(&head);
   }
-
+  
+  List * currentList = head; // current list points the head in the list of lists
+  Node * currentHead = head -> node; // current head points the the first node in the first linked list of linked lists
+  currentList -> node = currentHead; // head of the current list points the 
+  
   // shell sort implementation (too slow)
   for(count = (sequenceSize - 1); count >= 0; count--){
-    k = sequence[count]; // selects the value of k from sequence array
+    k = sequence[count]; // selects the value of k from sequence array 
   
-     for(int j = k; j <= (size - 1); j++){
-       temp_r = getNode(list, j) -> value;
-       i = j;
-
-       while(i >= k && getNode(list, i - k) -> value > temp_r){
-         *n_comp += 1; // increments the number of comparisons made
-         getNode(list, i) -> value = getNode(list, i - k) -> value;
-         i = i - k;
-       }
-       getNode(list, i) -> value = temp_r;
-     }
+    // for(i = 0; i < k; i++){
+    //   for(int j = i; j < size; j += k){
+    //     // push(&currentHead, getNode(list, j) -> value);
+    //     // fprintf(stdout, "%ld -> ", currentHead -> value);
+    //     fprintf(stdout, "")
+    //   }
+    //   // bubblesort(currentHead);
+    //   currentHead = currentList -> next -> node;
+    //   // fprintf(stdout, "\n");
+    // }
+    // // fprintf(stdout, "\n\n");
   }
-  
+  bubblesort(list);
+
   t = clock() - t; 
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
   
   fprintf(stdout, "Function: Sort List took %f seconds to execute.\n", time_taken); // *** need to remove
+
+  // deletion of list of lists
+  currentList = head; // current position in linked list
+  List * next; // next list from current list in linked list
   
+  while(currentList != NULL){ 
+    next = currentList -> next; 
+    free(currentList); // make sure to delete every not in the list along with the list 
+    currentList = next; 
+  } 
+  
+  currentList = NULL; // ensures list is empty 
+
   free(sequence); // frees the sequence array
   return list; 
 }
 
-void push(Node ** head, long value){
+static void push(Node ** head, long value){
   Node * node = malloc(sizeof(*node)); // allocates memory for new node
   node -> value = value; // adds the given value to the node's value
   
@@ -111,7 +130,7 @@ void push(Node ** head, long value){
   (*head) = node; // moves the head to point to the new node
 } 
 
-void pushList(List ** head){
+static void pushList(List ** head){
   List * list = malloc(sizeof(*list)); // allocates memory for new node
   
   list -> next = (*head); // makes new node the head of the linked list
@@ -119,10 +138,10 @@ void pushList(List ** head){
   (*head) = list; // moves the head to point to the new node
 } 
 
-Node * getNode(Node *head, int index){ 
+static Node * getNode(Node *head, int index){ 
   int count = 0; 
   
-  //if count equal too n return node->data 
+  //if count equal too n return node->value 
   if(count == index){ 
     return head; 
   }
@@ -177,4 +196,39 @@ int List_Save_To_File(char *filename, Node *list){
   fprintf(stdout, "Function: Save List took %f seconds to execute.\n\n", time_taken); // *** need to remove
   fclose(file); // closes the file
   return elements;
+}
+
+static void bubblesort(Node *start){ 
+  int swapped;
+  int i;
+
+  Node * ptr1; 
+  Node * lptr = NULL; 
+  
+  // checks for empty list
+  if (start == NULL) 
+    return; 
+  
+  do
+  { 
+    swapped = 0; 
+    ptr1 = start; 
+  
+    while (ptr1 -> next != lptr){ 
+      if (ptr1 -> value > ptr1 -> next -> value){  
+        swap(ptr1, ptr1 -> next); 
+        swapped = 1; 
+      } 
+      
+      ptr1 = ptr1 -> next; 
+    } 
+      lptr = ptr1; 
+    } while (swapped); 
+} 
+  
+static void swap(Node * a, Node * b){ 
+  long temp = a -> value; 
+  
+  a -> value = b -> value; 
+  b -> value = temp; 
 }
