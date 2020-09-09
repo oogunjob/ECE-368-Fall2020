@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "sequence.h"
 
-static void bubbleSort(long * array, long size);
+static void bubblesort(long * array, long size);
 static void swap(long * x, long * y);
 
 long *Generate_2p3q_Seq(int length, int *seq_size){
@@ -13,6 +12,11 @@ long *Generate_2p3q_Seq(int length, int *seq_size){
   }
 
   long * sequence = malloc(sizeof(*sequence) * ++(*seq_size)); // array that stores the sequence of powers
+  // if malloc fails, returns NULL, and stores 0 in seq_size
+  if(sequence == NULL){
+    *seq_size = 0;
+    return NULL;
+  }
 
   long power_q = 1; // power that corresponds to q
   long power_p; // power that corresponds to p
@@ -33,12 +37,12 @@ long *Generate_2p3q_Seq(int length, int *seq_size){
   *seq_size = *seq_size - 1; // removes extra value from sequence size
   sequence = realloc(sequence, sizeof(*sequence) * (*seq_size)); // resizes the sequence array
   
-  bubbleSort(sequence, *seq_size); // sorts the sequence array in ascending order *** QuickSort ? ***
+  bubblesort(sequence, *seq_size); // sorts the sequence array in ascending order *** QuickSort ? ***
 
   return sequence; // returns the sequence array
 }
 
-static void bubbleSort(long * array, long size){
+static void bubblesort(long * array, long size){
   int i; // loop control variable
   int j; // loop control variable
  

@@ -4,13 +4,12 @@
 #include "sequence.h"
 
 long * Array_Load_From_File(char *filename, int *size){
-
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in array
 
   // if file is NULL, save size as zero, and return empty array
   if(file == NULL){	
     fprintf(stderr, "ERROR: File is NULL.\n");
-    *size = 0;
+    *size = 0; 
     fclose(file);
     return NULL;
   }
@@ -64,13 +63,11 @@ void Array_Shellsort(long *array, int size, long *n_comp){
   return;
 }
 
-int Array_Save_To_File(char *filename, long *array, int size)
-{
+int Array_Save_To_File(char *filename, long *array, int size){
   FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
 
   // if the array is empty, closes the file and returns a count of no elements written
-  if(array == NULL || size == 0)
-  {
+  if(array == NULL || size == 0){
     fclose(file); // closes file
 	  return 0;
   }
@@ -79,8 +76,7 @@ int Array_Save_To_File(char *filename, long *array, int size)
   int elements = 0; // number of elements written to the file
   int index; // index of elements in array
 
-  for(index = 0; index < size; index++)
-  {	
+  for(index = 0; index < size; index++){	
     fwrite(&array[index], sizeof(long), 1, file);
 	  elements++; 
   }

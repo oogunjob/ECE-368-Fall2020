@@ -5,7 +5,8 @@
 #include "sequence.h"
 #include "list_of_list.h"
 
-static void push(Node ** head, long value);
+static void insertNode(Node* previous, long value);
+
 static void pushList(List ** head);
 static void bubblesort(Node * head);
 static void swap(Node *a, Node *b);
@@ -28,10 +29,21 @@ Node * List_Load_From_File(char * filename){
   long value; // the value read from the file 
  
   Node * head = NULL; // creates a head node
+  Node * current = head; // current node points the head of the linked list
  
   // Stores the the values in the linked list
   while(fread(&value, sizeof(long), 1, file)){
-    push(&head, value); // adds new nodes into linked storing values from file
+    if(head == NULL){
+      head = malloc(sizeof(*head));
+      head -> value = value;
+      head -> next = NULL;
+      current = head;
+    } 
+    
+    else{
+      insertNode(current, value);
+      current = current -> next;
+    }
   }
 
   t = clock() - t; 
@@ -104,7 +116,7 @@ Node *List_Shellsort(Node *list, long *n_comp){
   t = clock() - t; 
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
   
-  fprintf(stdout, "Function: Sort List took %f seconds to execute.\n", time_taken); // *** need to remove
+  // fprintf(stdout, "Function: Sort List took %f seconds to execute.\n", time_taken); // *** need to remove
 
   // deletion of list of lists
   currentList = head; // current position in linked list
@@ -121,15 +133,6 @@ Node *List_Shellsort(Node *list, long *n_comp){
   free(sequence); // frees the sequence array
   return list; 
 }
-
-static void push(Node ** head, long value){
-  Node * node = malloc(sizeof(*node)); // allocates memory for new node
-  node -> value = value; // adds the given value to the node's value
-  
-  node -> next = (*head); // makes new node the head of the linked list
-  
-  (*head) = node; // moves the head to point to the new node
-} 
 
 static void pushList(List ** head){
   List * list = malloc(sizeof(*list)); // allocates memory for new node
@@ -192,7 +195,7 @@ int List_Save_To_File(char *filename, Node *list){
   t = clock() - t; 
   double time_taken = ((double)t)/CLOCKS_PER_SEC; // time taken (in seconds)
   
-  fprintf(stdout, "Function: Save List took %f seconds to execute.\n\n", time_taken); // *** need to remove
+  // fprintf(stdout, "Function: Save List took %f seconds to execute.\n\n", time_taken); // *** need to remove
   fclose(file); // closes the file
   return elements;
 }
@@ -228,6 +231,15 @@ static void bubblesort(Node *start){
 static void swap(Node * a, Node * b){ 
   long temp = a -> value; 
   
+  // swaps values or a and b
   a -> value = b -> value; 
   b -> value = temp; 
+}
+
+static void insertNode(Node* previous, long value){ 
+  Node* new_node = malloc(sizeof(*new_node)); // creates new node
+  new_node -> value = value; // assigns given value to new node's value
+  
+  new_node -> next = previous -> next; // new node's next points to the next of previous node
+  previous -> next = new_node; // previous node now points to new node
 }
