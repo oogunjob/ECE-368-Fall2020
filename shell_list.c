@@ -7,12 +7,12 @@
 
 static void insertNode(Node* previous, long value);
 static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp);
-static void freeSubList(List * subList);
+static void deleteList(List * subList);
 
 static List * addList(Node * sublist);
 static List * addSubList(List * head, int k, long *n_comp, bool sortUp);
 
-static Node* removeNode(Node** head);
+static Node* deleteNode(Node** head);
 
 Node * List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
@@ -149,7 +149,7 @@ static List * addSubList(List * head, int k, long *n_comp, bool sortUp){
   Node * node = NULL;
 
   for(int i = 0; i < k; i++){
-    node = removeNode(&(prevList -> node));
+    node = deleteNode(&(prevList -> node));
     if (i == 0){
       head = addList(node);
       listptr = head;
@@ -176,7 +176,7 @@ static List * addSubList(List * head, int k, long *n_comp, bool sortUp){
     sortUp = true;
     // shell sort
   while(true){
-    node = removeNode(&( prevList -> node));
+    node = deleteNode(&( prevList -> node));
     listptr = listptr -> next;
     if(node == NULL)
       break;
@@ -185,7 +185,7 @@ static List * addSubList(List * head, int k, long *n_comp, bool sortUp){
     prevList =  prevList -> next;
   }
     
-  freeSubList(prevList);
+  deleteList(prevList);
   return head;
 }
 
@@ -225,44 +225,43 @@ static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp){ // ne
     
   ins -> next = temp -> next;
   temp -> next = ins;
-
-  return;
 }
 
-static Node* removeNode(Node** head){
-  if (*head == NULL){
+static Node* deleteNode(Node** head){
+  // if head is already empty, return NULL back to caller function
+  if(*head == NULL){
     return NULL;
   }
     
   else{
-    Node * removed = *head;
-    *head = (*head) -> next;
-    removed -> next = NULL;
+    Node * deleted = *head; // 'deleted' node points to head node
+    *head = (*head) -> next; // new head is the node after head
+    deleted -> next = NULL; // node after deleted is null
 
-    return removed;
+    return deleted; // returns 'deleted' node
   }
 }
 
-// free sub list nodes
-static void freeSubList(List * subList){
-  if(subList == NULL){
+static void deleteList(List * subList){
+  // if sublist is already null, return to caller function
+  if(!subList){
     return;
   }
 
-  List * subListNext = subList -> next;
+  List * subListNext = subList -> next; // node that points to the node after the sub list 
   
+  // if the next node after the sub list is not the sub list, free every node up until then
   if(subListNext != subList){
-    List * temp = NULL;
+    List * temp = NULL; // temporary placeholder list
     
     while(subList != subListNext){
-      temp = subListNext;
+      temp = subListNext; // temporary list is the next list in the sublist
       subListNext = subListNext -> next;
-      free(temp);
+      free(temp); // deletes the list
     }
   }
 
-  free(subList);
-  return;
+  free(subList); // completely frees sublist
 }
 
 static List * addList(Node * sublist){
