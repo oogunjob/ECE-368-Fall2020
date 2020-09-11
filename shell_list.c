@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h> // will need to remove
 #include "shell_list.h"
 #include "sequence.h"
 #include "list_of_list.h"
 
-static void insertNode(Node* previous, long value);
-static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp);
-static void deleteList(List * subList);
+static void insertNode(Node *previous, long value);
+static void addAndSort(Node **head, Node *ins, long *n_comp, int sortUp);
+static void deleteList(List *subList);
 
-static List * addList(Node * sublist);
-static List * addSubList(List * head, int k, long *n_comp, bool sortUp);
+static Node* deleteNode(Node **head);
 
-static Node* deleteNode(Node** head);
+static List * addList(Node *sublist);
+static List * addSublist(List *head, int k, long *n_comp, int sortUp);
 
 Node * List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
@@ -25,7 +24,7 @@ Node * List_Load_From_File(char * filename){
 
   long value; // the value read from the file 
  
-  Node * head = NULL; // creates a head node
+  Node * head = NULL; // creates a head node of linked list
   Node * current = head; // current node points the head of the linked list
  
   // Stores the the values in the linked list
@@ -56,7 +55,7 @@ Node *List_Shellsort(Node *list, long *n_comp){
     size++; // increments count of size
     current = current -> next; // positions to next node in the linked list
   } 
-  
+
   int sequenceSize = 0; // number of elements in the sequence
   long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the linked list
 
@@ -71,27 +70,30 @@ Node *List_Shellsort(Node *list, long *n_comp){
   head -> node = list; // first node in the list of lists points to the original list
   head -> next = head; // head of the list of lists points back to itself
 
-  bool sortUp = false;
+  int sortUp = 0; // determines wheter list need to be sorted up (0 indicates false, and 1 indicates true)
 
+  // creates sub lists from list and sorts k sub lists based on sequence and rearanges original list in sorted order 
   while(count <= sequenceSize){
-    if(sortUp == false){
-      sortUp = true;
+    if(!sortUp){
+      sortUp = 1;
     }
     else{
-      sortUp = false;
+      sortUp = 0;
     }
 
-    head = addSubList(head, k, n_comp, sortUp);
+    head = addSublist(head, k, n_comp, sortUp); // adds sub lists to head of linked list of linked lists
+    
+    // selection of k for lists that will be created
     if(k != 1){
     k = sequence[sequenceSize - ++(count)];
     }
     else{
-      count++;
+      count++; // increments count to go to the next number in the sequence array
     }
   }
 
-  list = head -> node;
-  free(head);
+  list = head -> node; // head of list points to the head in the linked list of linked lists
+  free(head); // frees the head in the linked list of linked lists
 
   free(sequence); // frees the sequence array
   return list; 
@@ -135,7 +137,7 @@ int List_Save_To_File(char *filename, Node *list){
   return elements;
 }
 
-static void insertNode(Node* previous, long value){ 
+static void insertNode(Node *previous, long value){ 
   Node* new_node = malloc(sizeof(*new_node)); // creates new node
   new_node -> value = value; // assigns given value to new node's value
   
@@ -143,59 +145,62 @@ static void insertNode(Node* previous, long value){
   previous -> next = new_node; // previous node now points to new node
 }
 
-static List * addSubList(List * head, int k, long *n_comp, bool sortUp){
-  List * prevList = head;
-  List * listptr = NULL;; // traversal
-  Node * node = NULL;
+static List * addSublist(List *head, int k, long *n_comp, int sortUp){
+  List * previous = head; // previous list points the head passed from function
+  List * current = NULL; // traversal node that is evaluated
+  Node * node = NULL; // placeholder node
+  int i; // loop control variable
 
-  for(int i = 0; i < k; i++){
-    node = deleteNode(&(prevList -> node));
-    if (i == 0){
+  for(i = 0; i < k; i++){
+    node = deleteNode(&(previous -> node));
+    
+    if (!i){
       head = addList(node);
-      listptr = head;
+      current = head;
     }
         
     else{
-      listptr -> next = addList(node);
-      listptr = listptr -> next;
+      current -> next = addList(node);
+      current = current -> next;
 
-      if(node == NULL){ // empty
-        prevList =  prevList ->next;
+      if(node == NULL){ 
+        previous =  previous ->next;
         break; 
       }
             
       node -> next = NULL;
-      listptr -> node = node;
+      current -> node = node;
 
     }
-    prevList =  prevList -> next;
+    previous = previous -> next;
   }
 
-  listptr -> next = head; // circular link
-  if (k == 1) // sort upwards for last sort
-    sortUp = true;
-    // shell sort
-  while(true){
-    node = deleteNode(&( prevList -> node));
-    listptr = listptr -> next;
+  current -> next = head;
+  if (k == 1) 
+    sortUp = 1;
+  
+  // sorting of linked list
+  while(1){
+    node = deleteNode(&( previous -> node));
+    current = current -> next;
     if(node == NULL)
       break;
         
-    addAndSort(&(listptr ->node), node,n_comp, sortUp);
-    prevList =  prevList -> next;
+    addAndSort(&(current ->node), node,n_comp, sortUp);
+    previous =  previous -> next;
   }
     
-  deleteList(prevList);
+  deleteList(previous);
   return head;
 }
 
 // add nodes to sublists and sort them
-static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp){ // need to rename this
+static void addAndSort(Node **head, Node *ins, long *n_comp, int sortUp){ // need to rename this
   Node * temp = NULL;
   temp = *head;
   (*n_comp)++;
   
-  if (sortUp == true){ // sort upward
+  if (sortUp){ 
     if(ins -> value < (*head) -> value){
       ins -> next = *head;
       (*head) = ins;
@@ -210,7 +215,7 @@ static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp){ // ne
     }
   }
     
-  else{ // sort downward
+  else{ 
     if(ins -> value > (*head) -> value){
       ins -> next = *head;
       (*head) = ins;
@@ -227,12 +232,11 @@ static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp){ // ne
   temp -> next = ins;
 }
 
-static Node* deleteNode(Node** head){
+static Node * deleteNode(Node **head){
   // if head is already empty, return NULL back to caller function
   if(*head == NULL){
     return NULL;
-  }
-    
+  } 
   else{
     Node * deleted = *head; // 'deleted' node points to head node
     *head = (*head) -> next; // new head is the node after head
@@ -242,7 +246,7 @@ static Node* deleteNode(Node** head){
   }
 }
 
-static void deleteList(List * subList){
+static void deleteList(List *subList){
   // if sublist is already null, return to caller function
   if(!subList){
     return;
@@ -264,7 +268,7 @@ static void deleteList(List * subList){
   free(subList); // completely frees sublist
 }
 
-static List * addList(Node * sublist){
+static List * addList(Node *sublist){
   List * list = malloc(sizeof(*list)); // allocates memory for new sub list
   
   list -> node = sublist; // head of sublist points to the list
