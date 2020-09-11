@@ -65,7 +65,6 @@ Node *List_Shellsort(Node *list, long *n_comp){
   int k; // sequence control variable
   
   k = sequence[sequenceSize - count]; // highest value of k
-  fprintf(stdout, "The last value in sequence is: %ld\n", k);
   
   List * head = malloc(sizeof(*head)); // head of list of lists
   head -> node = list; // first node in the list of lists points to the original list
