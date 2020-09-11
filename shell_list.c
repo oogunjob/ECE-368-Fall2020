@@ -8,12 +8,12 @@ static void insertNode(Node *previous, long value);
 static void addAndSort(Node **head, Node *ins, long *n_comp, int sortUp);
 static void deleteList(List *subList);
 
-static Node* deleteNode(Node **head);
+static Node *deleteNode(Node **head);
 
-static List * addList(Node *sublist);
-static List * addSublist(List *head, int k, long *n_comp, int sortUp);
+static List *addList(Node *sublist);
+static List *addSublist(List *head, int k, long *n_comp, int sortUp);
 
-Node * List_Load_From_File(char * filename){
+Node *List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
   
   if(file == NULL){
@@ -145,10 +145,11 @@ static void insertNode(Node *previous, long value){
   previous -> next = new_node; // previous node now points to new node
 }
 
-static List * addSublist(List *head, int k, long *n_comp, int sortUp){
+static List *addSublist(List *head, int k, long *n_comp, int sortUp){
   List * previous = head; // previous list points the head passed from function
   List * current = NULL; // traversal node that is evaluated
   Node * node = NULL; // placeholder node
+  
   int i; // loop control variable
 
   for(i = 0; i < k; i++){
@@ -232,7 +233,7 @@ static void addAndSort(Node **head, Node *ins, long *n_comp, int sortUp){ // nee
   temp -> next = ins;
 }
 
-static Node * deleteNode(Node **head){
+static Node *deleteNode(Node **head){
   // if head is already empty, return NULL back to caller function
   if(*head == NULL){
     return NULL;
@@ -268,7 +269,7 @@ static void deleteList(List *subList){
   free(subList); // completely frees sublist
 }
 
-static List * addList(Node *sublist){
+static List *addList(Node *sublist){
   List * list = malloc(sizeof(*list)); // allocates memory for new sub list
   
   list -> node = sublist; // head of sublist points to the list
