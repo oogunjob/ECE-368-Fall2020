@@ -6,20 +6,12 @@
 #include "list_of_list.h"
 
 static void insertNode(Node* previous, long value);
-
+// need to order these
 static List * addSubList(List * head, int k, long *n_comp, bool sortUp);
 static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp);
 static Node* removeNode(Node** head);
 static void freeSubList(List * subList);
 static List * addList(Node * sublist);
-
-static List * addList(Node * sublist)
-{
-    List * new = malloc(sizeof(List));
-    new -> node = sublist;
-    new -> next = NULL;
-    return new;
-} 
 
 Node * List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
@@ -73,6 +65,7 @@ Node *List_Shellsort(Node *list, long *n_comp){
   int k; // sequence control variable
   
   k = sequence[sequenceSize - count]; // highest value of k
+  fprintf(stdout, "The last value in sequence is: %ld\n", k);
   
   List * head = malloc(sizeof(*head)); // head of list of lists
   head -> node = list; // first node in the list of lists points to the original list
@@ -89,7 +82,12 @@ Node *List_Shellsort(Node *list, long *n_comp){
     }
 
     head = addSubList(head, k, n_comp, sortUp);
+    if(k != 1){
     k = sequence[sequenceSize - ++(count)];
+    }
+    else{
+      count++;
+    }
   }
 
   list = head -> node;
@@ -235,6 +233,7 @@ static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp)
 
     return;
 }
+
 static Node* removeNode(Node** head)
 {
     if (*head == NULL)
@@ -250,7 +249,6 @@ static Node* removeNode(Node** head)
         return removed;
     }
 }
-
 
 // free sub list nodes
 static void freeSubList(List * subList){
@@ -276,3 +274,11 @@ static void freeSubList(List * subList){
     free(subList);
     return;
 }
+
+static List * addList(Node * sublist)
+{
+    List * new = malloc(sizeof(List));
+    new -> node = sublist;
+    new -> next = NULL;
+    return new;
+} 
