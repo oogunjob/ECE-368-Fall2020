@@ -6,8 +6,6 @@
 #include "list_of_list.h"
 
 static void insertNode(Node* previous, long value);
-static void pushList(List ** head);
-static Node * getNode(Node * head, int index); // *** need to remove
 
 static List * addSubList(List * head, int k, long *n_comp, bool sortUp);
 static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp);
@@ -73,8 +71,6 @@ Node *List_Shellsort(Node *list, long *n_comp){
 
   int count = 1; // loop control variable that determines value of k
   int k; // sequence control variable
-  int i; // loop control variable for comparison
-  long temp_r; // temporary number
   
   k = sequence[sequenceSize - count]; // highest value of k
   
@@ -84,7 +80,7 @@ Node *List_Shellsort(Node *list, long *n_comp){
 
   bool sortUp = false;
 
-  while(k > 1){
+  while(count <= sequenceSize){
     if(sortUp == false){
       sortUp = true;
     }
@@ -99,60 +95,9 @@ Node *List_Shellsort(Node *list, long *n_comp){
   list = head -> node;
   free(head);
 
-
-
-  // // shell sort implementation (too slow)
-  // for(count = (sequenceSize - 1); count >= 0; count--){
-  //   k = sequence[count]; // selects the value of k from sequence array 
-  
-  //   for(int j = k; j <= (size - 1); j++){
-  //     temp_r = getNode(list, j) -> value;
-  //     i = j;
-
-  //     while(i >= k && getNode(list, i - k) -> value > temp_r){
-  //       *n_comp += 1; // increments the number of comparisons made
-  //       getNode(list, i) -> value = getNode(list, i - k) -> value;
-  //       i = i - k;
-  //     }
-  //     getNode(list, i) -> value = temp_r;
-  //   }
-  // }
-
-  // // deletion of list of lists
-  // currentList = head; // current position in linked list
-  // List * next; // next list from current list in linked list
-  
-  // while(currentList != NULL){ 
-  //   next = currentList -> next; 
-  //   free(currentList); // make sure to delete every not in the list along with the list 
-  //   currentList = next; 
-  // } 
-  
-  // currentList = NULL; // ensures list is empty 
-
   free(sequence); // frees the sequence array
   return list; 
 }
-
-static void pushList(List ** head){
-  List * list = malloc(sizeof(*list)); // allocates memory for new node
-  
-  list -> next = (*head); // makes new node the head of the linked list
-  
-  (*head) = list; // moves the head to point to the new node
-} 
-
-static Node * getNode(Node *head, int index){ 
-  int count = 0; 
-  
-  //if count equal too n return node->value 
-  if(count == index){ 
-    return head; 
-  }
-      
-  //recursively decrease n and increase head to next pointer  
-  return getNode(head-> next, index - 1);  
-} 
 
 int List_Save_To_File(char *filename, Node *list){
   FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
@@ -172,7 +117,6 @@ int List_Save_To_File(char *filename, Node *list){
   while(temp != NULL){
 	// writes the value stored in linked list to the file
 	value = temp -> value;
-  fprintf(stdout, "%ld\n", value);
 	fwrite(&value, sizeof(long), 1, file);   
 	temp = temp -> next;
 	
@@ -203,7 +147,7 @@ static void insertNode(Node* previous, long value){
 
 static List * addSubList(List * head, int k, long *n_comp, bool sortUp){
     List * prevList = head;
-    List * listptr; // traversal
+    List * listptr = NULL;; // traversal
     Node * node = NULL;
     //printf("\npointer to newList %p", (void*)newList);
     for(int i = 0; i < k; i++)
