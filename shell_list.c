@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <stdbool.h> // will need to remove
 #include "shell_list.h"
 #include "sequence.h"
 #include "list_of_list.h"
 
 static void insertNode(Node* previous, long value);
-// need to order these
-static List * addSubList(List * head, int k, long *n_comp, bool sortUp);
 static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp);
-static Node* removeNode(Node** head);
 static void freeSubList(List * subList);
+
 static List * addList(Node * sublist);
+static List * addSubList(List * head, int k, long *n_comp, bool sortUp);
+
+static Node* removeNode(Node** head);
 
 Node * List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
@@ -47,15 +48,15 @@ Node * List_Load_From_File(char * filename){
 }
 
 Node *List_Shellsort(Node *list, long *n_comp){
+  Node * current = list;  // head of the linked list
   int size = 0;  // size of the linked list
-  Node* current = list;  // head of the linked list
-  
+
   // counts the number of nodes in the linked list
   while (current != NULL){ 
     size++; // increments count of size
     current = current -> next; // positions to next node in the linked list
   } 
-
+  
   int sequenceSize = 0; // number of elements in the sequence
   long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the linked list
 
@@ -143,141 +144,132 @@ static void insertNode(Node* previous, long value){
 }
 
 static List * addSubList(List * head, int k, long *n_comp, bool sortUp){
-    List * prevList = head;
-    List * listptr = NULL;; // traversal
-    Node * node = NULL;
-    //printf("\npointer to newList %p", (void*)newList);
-    for(int i = 0; i < k; i++)
-    {
-        node = removeNode(&(prevList -> node));
-        if (i == 0)
-        {
-            head = addList(node);
-            listptr = head;
-        }
-        else
-        {
-            listptr -> next = addList(node);
-            listptr = listptr -> next;
+  List * prevList = head;
+  List * listptr = NULL;; // traversal
+  Node * node = NULL;
 
-            if(node == NULL) // empty
-            {
-                prevList =  prevList ->next;
-                break; 
-            }
-            node -> next = NULL;
-            listptr -> node = node;
-            //printf("%p\n", (void*)listptr);
-        }
-        prevList =  prevList -> next;
+  for(int i = 0; i < k; i++){
+    node = removeNode(&(prevList -> node));
+    if (i == 0){
+      head = addList(node);
+      listptr = head;
     }
+        
+    else{
+      listptr -> next = addList(node);
+      listptr = listptr -> next;
 
-    listptr -> next = head; // circular link
-    if (k == 1) // sort upwards for last sort
-        sortUp = true;
+      if(node == NULL){ // empty
+        prevList =  prevList ->next;
+        break; 
+      }
+            
+      node -> next = NULL;
+      listptr -> node = node;
+
+    }
+    prevList =  prevList -> next;
+  }
+
+  listptr -> next = head; // circular link
+  if (k == 1) // sort upwards for last sort
+    sortUp = true;
     // shell sort
-    while(true)
-    {
-        node = removeNode(&( prevList -> node));
-        listptr = listptr -> next;
-        if(node == NULL)
-            break;
-        addAndSort(&(listptr ->node), node,n_comp, sortUp);
-        prevList =  prevList -> next;
-    }
-    freeSubList(prevList);
-    return head;
+  while(true){
+    node = removeNode(&( prevList -> node));
+    listptr = listptr -> next;
+    if(node == NULL)
+      break;
+        
+    addAndSort(&(listptr ->node), node,n_comp, sortUp);
+    prevList =  prevList -> next;
+  }
+    
+  freeSubList(prevList);
+  return head;
 }
 
 // add nodes to sublists and sort them
-static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp)
-{
-    Node * temp = NULL;
-    temp = *head;
-    (*n_comp)++;
-    if (sortUp == true) // sort upward
-    {
-        if( ins -> value < (*head) -> value )
-        {
-            ins -> next = *head;
-            (*head) = ins;
-            return;
-        }
-        else
-        {
-            while((temp -> next != NULL) && (((temp -> next) -> value) < (ins -> value)))
-            {
-                temp = temp -> next;
-                (*n_comp)++;
-            }
-        }
+static void addAndSort(Node** head, Node* ins, long *n_comp, bool sortUp){ // need to rename this
+  Node * temp = NULL;
+  temp = *head;
+  (*n_comp)++;
+  
+  if (sortUp == true){ // sort upward
+    if(ins -> value < (*head) -> value){
+      ins -> next = *head;
+      (*head) = ins;
+      return;
     }
-    else // sort downward
-    {
-        if(ins -> value > (*head) -> value)
-        {
-            ins -> next = *head;
-            (*head) = ins;
-            return;
-        }
-
-        while((temp -> next != NULL) && (((temp -> next) -> value) > (ins -> value)))
-        {
-            temp = temp -> next;
-            (*n_comp)++;
-        }
+        
+    else{
+      while((temp -> next != NULL) && (((temp -> next) -> value) < (ins -> value))){
+        temp = temp -> next;
+        (*n_comp)++;
+      }
     }
-    ins -> next = temp -> next;
-    temp -> next = ins;
+  }
+    
+  else{ // sort downward
+    if(ins -> value > (*head) -> value){
+      ins -> next = *head;
+      (*head) = ins;
+      return;
+    }
 
-    return;
+    while((temp -> next != NULL) && (((temp -> next) -> value) > (ins -> value))){
+      temp = temp -> next;
+      (*n_comp)++;
+    }
+  }
+    
+  ins -> next = temp -> next;
+  temp -> next = ins;
+
+  return;
 }
 
-static Node* removeNode(Node** head)
-{
-    if (*head == NULL)
-    {
-        return NULL;
-    }
-    else
-    {
-        Node * removed = *head;
-        *head = (*head) -> next;
-        removed -> next = NULL;
+static Node* removeNode(Node** head){
+  if (*head == NULL){
+    return NULL;
+  }
+    
+  else{
+    Node * removed = *head;
+    *head = (*head) -> next;
+    removed -> next = NULL;
 
-        return removed;
-    }
+    return removed;
+  }
 }
 
 // free sub list nodes
 static void freeSubList(List * subList){
-    if(subList == NULL){
-        return;
-    }
-
-    List * subListNext = subList -> next;
-    if(subListNext == subList)
-    {
-        // empty
-    }
-    else
-    {
-        List * temp = NULL;
-        while((subList != subListNext))
-        {
-            temp = subListNext;
-            subListNext = subListNext -> next;
-            free(temp);
-        }
-    }
-    free(subList);
+  if(subList == NULL){
     return;
+  }
+
+  List * subListNext = subList -> next;
+  
+  if(subListNext != subList){
+    List * temp = NULL;
+    
+    while(subList != subListNext){
+      temp = subListNext;
+      subListNext = subListNext -> next;
+      free(temp);
+    }
+  }
+
+  free(subList);
+  return;
 }
 
-static List * addList(Node * sublist)
-{
-    List * new = malloc(sizeof(List));
-    new -> node = sublist;
-    new -> next = NULL;
-    return new;
+static List * addList(Node * sublist){
+  List * list = malloc(sizeof(*list)); // allocates memory for new sub list
+  
+  list -> node = sublist; // head of sublist points to the list
+  list -> next = NULL; // next of sub list is null
+  
+  return list; // returns new list
 } 
