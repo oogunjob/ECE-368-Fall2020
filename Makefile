@@ -51,5 +51,10 @@ test6: pa1
 
 	./pa1 -l 0.b output6l
 
+test7: pa1
+	./pa1 -b 15.b output7a
+
+	./pa1 -b 15.b output7l	
+
 clean: # remove all machine generated files
 	rm -f pa1 *.o output?
