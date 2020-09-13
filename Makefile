@@ -46,13 +46,19 @@ test5: pa1
 
 	./pa1 -l 1M.b output5l
 
+# empty binary file
 test6: pa1
 	./pa1 -a 0.b output6a
 
 	./pa1 -l 0.b output6l
 
+# invalid second argument
 test7: pa1
-	./pa1 -b 15.b output7a	
+	./pa1 -b 15.b output7a
+
+# insufficient number of arguments
+test8: pa1
+	./pa1 15.b output8a	
 
 clean: # remove all machine generated files
 	rm -f pa1 *.o output?

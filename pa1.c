@@ -7,7 +7,7 @@
 int main(int argc, char * * argv) { 
   // ensures there are 4 arguments given
   if (argc < 4) {
-    fprintf(stderr, "ERROR: Arguments less than 4.\n");
+    fprintf(stderr, "ERROR: Number of arguments less than 4.\n");
     return EXIT_FAILURE;
   }
 
@@ -42,7 +42,7 @@ int main(int argc, char * * argv) {
     elements = List_Save_To_File(argv[3], list); // saves the elemments the file and returns the number of elements printed
 	
     fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output 
-    
+
     return EXIT_SUCCESS; // exits program 
   }
 
