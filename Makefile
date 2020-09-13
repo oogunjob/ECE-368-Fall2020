@@ -13,7 +13,7 @@ pa1: $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: pa1
-	$(VAL) ./pa1 -l 0.b output1l
+	$(VAL) ./pa1 -a 100K.b output1a
 
 testall: test1 test2 test3 test4 test5 test6
 

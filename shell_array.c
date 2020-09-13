@@ -38,22 +38,22 @@ void Array_Shellsort(long *array, int size, long *n_comp){
   int count = 1; // loop control variable that determines value of k
   int k; // sequence control variable
   int i; // loop control variable for comparison
-  long temp_r; // temporary number
+  long temp; // temporary number
   
   // shell sort implementation
   for(count = (sequenceSize - 1); count >= 0; count--){
     k = sequence[count]; // selects the value of k from sequence array
   
     for(int j = k; j <= (size - 1); j++){
-      temp_r = array[j];
+      temp = array[j];
       i = j;
 
-      while(i >= k && array[i - k] > temp_r){
+      while(i >= k && array[i - k] > temp){
         *n_comp += 1; // increments the number of comparisons made
         array[i] = array[i - k];
         i = i - k;
       }
-      array[i] = temp_r;
+      array[i] = temp;
     }
   }
 
