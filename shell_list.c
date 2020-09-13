@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "shell_list.h"
-#include "sequence.h"
 #include "list_of_list.h"
+#include "sequence.h"
 
 static void insertNode(Node *previous, long value);
 static void bubbleSort(Node **head, Node *node, long *n_comp, int sorted);

@@ -42,7 +42,7 @@ int main(int argc, char * * argv) {
     elements = List_Save_To_File(argv[3], list); // saves the elemments the file and returns the number of elements printed
 	
     fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output 
-
+    
     return EXIT_SUCCESS; // exits program 
   }
 
