@@ -15,7 +15,7 @@ pa1: $(OBJS)
 testmemory: pa1
 	$(VAL) ./pa1 -l 100K.b output1l
 
-testall: test1 test2 test3 test4 test5
+testall: test1 test2 test3 test4 test5 test6
 
 test1: pa1
 	./pa1 -a 15.b output1a
@@ -44,7 +44,12 @@ test4: pa1
 test5: pa1
 	./pa1 -a 1M.b output5a
 
-	./pa1 -l 1M.b outputla
+	./pa1 -l 1M.b output5l
+
+test6: pa1
+	./pa1 -a 0.b output6a
+
+	./pa1 -l 0.b output6l
 
 clean: # remove all machine generated files
 	rm -f pa1 *.o output?
