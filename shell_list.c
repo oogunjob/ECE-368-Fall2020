@@ -6,7 +6,7 @@
 
 static void insertNode(Node *previous, long value);
 static void bubbleSort(Node **head, Node *node, long *n_comp, int sorted);
-static void deleteList(List *subList);
+static void deleteList(List *sublist);
 
 static Node *deleteNode(Node **head);
 
@@ -59,17 +59,16 @@ Node *List_Shellsort(Node *list, long *n_comp){
   int sequenceSize = 0; // number of elements in the sequence
   long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the linked list
 
-  // if the linked list is empty, frees the sequence array and returns the array
-  if(size == 0){
-    free(sequence);
+  // if the linked list or sequence is empty, returns the list
+  if(size == 0 || sequenceSize == 0){
     return list;
   }
 
   int count = 1; // loop control variable that determines value of k
   int k; // sequence control variable
-  
+
   k = sequence[sequenceSize - count]; // highest value of k
-  
+
   List * head = malloc(sizeof(*head)); // head of list of lists
   head -> node = list; // first node in the list of lists points to the original list
   head -> next = head; // head of the list of lists points back to itself
@@ -78,13 +77,13 @@ Node *List_Shellsort(Node *list, long *n_comp){
 
   // creates sub lists from list and sorts k sub lists based on sequence and rearanges original list in sorted order 
   while(count <= sequenceSize){
+    fprintf(stdout, "%d\n", count);
     if(!sorted){
       sorted = 1;
     }
     else{
       sorted = 0;
     }
-
     head = addSublist(head, k, n_comp, sorted); // adds sub lists to head of linked list of linked lists
     
     // selection of k for lists that will be created
@@ -252,26 +251,26 @@ static Node *deleteNode(Node **head){
   }
 }
 
-static void deleteList(List *subList){
+static void deleteList(List *sublist){
   // if sublist is already null, return to caller function
-  if(!subList){
+  if(!sublist){
     return;
   }
 
-  List * subListNext = subList -> next; // node that points to the node after the sub list 
+  List * sublistNext = sublist -> next; // node that points to the node after the sub list 
   
   // if the next node after the sub list is not the sub list, free every node up until then
-  if(subListNext != subList){
+  if(sublistNext != sublist){
     List * temp = NULL; // temporary placeholder list
     
-    while(subList != subListNext){
-      temp = subListNext; // temporary list is the next list in the sublist
-      subListNext = subListNext -> next;
+    while(sublist != sublistNext){
+      temp = sublistNext; // temporary list is the next list in the sublist
+      sublistNext = sublistNext -> next;
       free(temp); // deletes the list
     }
   }
 
-  free(subList); // completely frees sublist
+  free(sublist); // completely frees sublist
 }
 
 static List *addList(Node *sublist){

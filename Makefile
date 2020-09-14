@@ -13,7 +13,7 @@ pa1: $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: pa1
-	$(VAL) ./pa1 -a 100K.b output1a
+	$(VAL) ./pa1 -a 0.b output1a
 
 testall: test1 test2 test3 test4 test5 test6
 
@@ -42,8 +42,6 @@ test4: pa1
 	./pa1 -l 100K.b output4l
 
 test5: pa1
-	./pa1 -a 1M.b output5a
-
 	./pa1 -l 1M.b output5l
 
 # empty binary file

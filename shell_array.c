@@ -35,6 +35,11 @@ void Array_Shellsort(long *array, int size, long *n_comp){
   int sequenceSize = 0; // number of elements in the sequence
   long *sequence = Generate_2p3q_Seq(size, &sequenceSize); // Pratt's sequence based on the size of the array
 
+  // if the array or sequence is empty, return to main function
+  if(size == 0 || sequenceSize == 0){
+    return;
+  }
+
   int count = 1; // loop control variable that determines value of k
   int k; // sequence control variable
   int i; // loop control variable for comparison

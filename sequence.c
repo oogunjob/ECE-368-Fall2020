@@ -12,6 +12,7 @@ long *Generate_2p3q_Seq(int length, int *seq_size){
   }
 
   long * sequence = malloc(sizeof(*sequence) * ++(*seq_size)); // array that stores the sequence of powers
+  
   // if malloc fails, returns NULL, and stores 0 in seq_size
   if(sequence == NULL){
     *seq_size = 0;
