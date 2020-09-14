@@ -25,8 +25,6 @@ int main(int argc, char * * argv){
 	
     fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output
 
-    free(array); // frees memory allocated for the array
-
     return EXIT_SUCCESS; // exits program
   }
 
