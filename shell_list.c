@@ -17,7 +17,7 @@ Node *List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
   
   if(file == NULL){
-    fprintf(stderr, "ERROR: File is NULL.\n");
+    fprintf(stderr, "ERROR: File could not be opened.\n");
 	  fclose(file); // closes file
     return NULL; // returns NULL value back to node
   }
@@ -77,7 +77,6 @@ Node *List_Shellsort(Node *list, long *n_comp){
 
   // creates sub lists from list and sorts k sub lists based on sequence and rearanges original list in sorted order 
   while(count <= sequenceSize){
-    fprintf(stdout, "%d\n", count);
     if(!sorted){
       sorted = 1;
     }
@@ -280,4 +279,4 @@ static List *addList(Node *sublist){
   list -> next = NULL; // next of sub list is null
   
   return list; // returns new list
-} 
+}
