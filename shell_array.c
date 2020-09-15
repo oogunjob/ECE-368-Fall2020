@@ -8,9 +8,7 @@ long * Array_Load_From_File(char *filename, int *size){
 
   // if file is NULL, save size as zero, and return empty array
   if(file == NULL){	
-    fprintf(stderr, "ERROR: File could not be opened.\n");
     *size = 0; 
-
     fclose(file);
     return NULL;
   }

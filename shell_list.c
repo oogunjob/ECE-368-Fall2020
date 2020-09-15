@@ -16,8 +16,8 @@ static List *addSublist(List *head, int k, long *n_comp, int sorted);
 Node *List_Load_From_File(char * filename){
   FILE * file = fopen(filename, "rb"); // opens binary file of numbers to store in linked list
   
+  // if file could not be opened, return empty linked list
   if(file == NULL){
-    fprintf(stderr, "ERROR: File could not be opened.\n");
 	  fclose(file); // closes file
     return NULL; // returns NULL value back to node
   }

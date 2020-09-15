@@ -19,6 +19,12 @@ int main(int argc, char * * argv){
 
 	  long * array = Array_Load_From_File(argv[2], &size); // loads the array from the file
     
+    // if the array is NULL, return EXIT_FAILURE
+    if(array == NULL){
+      fprintf(stderr, "Error: File could not be opened.\n");
+      return EXIT_FAILURE;
+    }
+
     Array_Shellsort(array, size, &n_comp); // performs shell sort on the array and calcuates number of comparisons made
 	  
     elements = Array_Save_To_File(argv[3], array, size); // saves the elemments the file and returns the number of elements printed
@@ -36,7 +42,7 @@ int main(int argc, char * * argv){
 	  int elements = 0; // number of elements written to the file
 
     Node * list = List_Load_From_File(argv[2]); // loads linked list from file
-
+    
     list = List_Shellsort(list, &n_comp); // performs shell sort on the linked and calcuates number of comparisons made
     
     elements = List_Save_To_File(argv[3], list); // saves the elemments the file and returns the number of elements printed
@@ -52,7 +58,7 @@ int main(int argc, char * * argv){
       free(current); 
       current = next; 
     }    
-    
+
     return EXIT_SUCCESS; // exits program 
   }
 
