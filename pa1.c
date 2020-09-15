@@ -25,6 +25,8 @@ int main(int argc, char * * argv){
 	
     fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output
 
+    free(array); // frees the array
+
     return EXIT_SUCCESS; // exits program
   }
 
@@ -41,6 +43,16 @@ int main(int argc, char * * argv){
 	
     fprintf(stdout, "%ld\n", n_comp); // prints number of comparisons to standard output 
 
+    // deletion of linked list
+    Node * current = list; // current position in linked list
+    Node * next; // next node from current node in linked list
+  
+    while(current != NULL){ 
+      next = current -> next; 
+      free(current); 
+      current = next; 
+    }    
+    
     return EXIT_SUCCESS; // exits program 
   }
 

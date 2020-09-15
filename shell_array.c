@@ -10,8 +10,9 @@ long * Array_Load_From_File(char *filename, int *size){
   if(file == NULL){	
     fprintf(stderr, "ERROR: File could not be opened.\n");
     *size = 0; 
+
     fclose(file);
-    return EXIT_FAILURE;
+    return NULL;
   }
 
   // determines how long the file is
@@ -72,7 +73,6 @@ int Array_Save_To_File(char *filename, long *array, int size){
   // if the array is empty, closes the file and returns a count of no elements written
   if(array == NULL || size == 0){
     fclose(file); // closes file
-    free(array);
 	  return 0;
   }
 
@@ -86,7 +86,5 @@ int Array_Save_To_File(char *filename, long *array, int size){
   }
 	
   fclose(file); // closes the file
-  
-  free(array); // frees array
   return elements; 
 }

@@ -105,7 +105,7 @@ int List_Save_To_File(char *filename, Node *list){
   FILE * file = fopen(filename, "wb"); // opens binary file that will be written to
  
   // if the linked list is empty, closes the file and returns a count of no elements written
-  if(list == NULL){
+  if(file == NULL || list == NULL){
     fclose(file);
     return 0;
   }
@@ -117,23 +117,12 @@ int List_Save_To_File(char *filename, Node *list){
   long value; // value of the node in linked list
   
   while(temp != NULL){
-	// writes the value stored in linked list to the file
-	value = temp -> value;
-	fwrite(&value, sizeof(long), 1, file);   
-	temp = temp -> next;
-	
-	elements++; // increments number of iterations
+	  // writes the value stored in linked list to the file
+	  value = temp -> value;
+	  fwrite(&value, sizeof(long), 1, file);   
+	  temp = temp -> next;
+	  elements++; // increments number of iterations
   }
- 
-  // deletion of linked list
-  Node * current = list; // current position in linked list
-  Node * next; // next node from current node in linked list
-  
-  while(current != NULL){ 
-    next = current -> next; 
-    free(current); 
-    current = next; 
-  } 
 
   fclose(file); // closes the file
   return elements;
