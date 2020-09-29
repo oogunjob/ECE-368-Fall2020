@@ -13,13 +13,12 @@ pa2: $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: pa2
-	$(VAL) ./pa2 -a 0.b output0a
+	$(VAL) ./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
 
-testall: test1 test2 test3 test4 test5 test6
+testall: gophers
 
-test1: pa2
-	./pa2 -a 15.b output1a
-	diff -w output1a 15sa.b
+gophers: pa2
+	./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
 
 clean: # remove all machine generated files
 	rm -f pa2 *.o output?
