@@ -10,7 +10,9 @@ typedef struct _HBTFile {
 } HBTFile;
 
 typedef struct _HBTTree {
-  long data;
+  int data;
+  int frequency;
+  char * character;
   struct _HBTTree *left;
   struct _HBTTree *right;
 } HBTTree;
@@ -19,6 +21,8 @@ HBTFile * openFile(char * filename);
 long loadEncodingSize(FILE * file);
 long loadTopoSize(FILE * file);
 long loadUnencodedSize(FILE * file);
+void loadTree(FILE * file);
+void openFiles(char * file1, char * file2, char * file3, char * file4, char * file5);
 
 #endif
 

@@ -15,10 +15,22 @@ pa2: $(OBJS)
 testmemory: pa2
 	$(VAL) ./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
 
-testall: gophers
+testall: gophers lorum stone woods binary1
 
 gophers: pa2
 	./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
+
+lorum: pa2
+	./pa2 encoded/lorum_huff.hbt lorum.tree lorum.ori lorum.count lorum.htree lorum.eval
+
+stone: pa2
+	./pa2 encoded/stone_huff.hbt stone.tree stone.ori stone.count stone.htree stone.eval
+
+woods: pa2
+	./pa2 encoded/woods_huff.hbt woods.tree woods.ori woods.count woods.htree woods.eval
+
+binary1: pa2
+	./pa2 encoded/binary1_huff.hbt binary1.tree binary1.ori binary1.count binary1.htree binary1.eval
 
 clean: # remove all machine generated files
 	rm -f pa2 *.o output?

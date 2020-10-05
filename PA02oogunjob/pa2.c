@@ -11,6 +11,7 @@ int main(int argc, char ** argv){
   
   // argv[0] = executable file
   // argv[1] = encoded input file
+  
   // argv[2] = output file for the tree
   // argv[3] = output file for original 
   // argv[4] = output file for count
@@ -18,13 +19,10 @@ int main(int argc, char ** argv){
   // argv[6] = output file for decoded file
 
   HBTFile * HBT = openFile(argv[1]); // loads the information stored in input file into HBT file
-  
+  openFiles(argv[2], argv[3], argv[4], argv[5], argv[6]); // opens files
 
 
+  free(HBT); // frees the HBT File
 
-
-
-
-  free(HBT);
   return EXIT_SUCCESS;
 }

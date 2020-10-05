@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include "sequence.h"
 
-static void bubblesort(long * array, long size);
-static void swap(long * x, long * y);
+static void bubblesort(long *array, long size);
+static void swap(long *x, long *y);
 
 long *Generate_2p3q_Seq(int length, int *seq_size){
   // if length contains 0 or 1 elements, returns a size of 0 and empty sequence
