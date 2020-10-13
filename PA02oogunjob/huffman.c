@@ -9,10 +9,6 @@ HBTFile * openFile(char * filename){
   head -> encodedSize = loadEncodingSize(file); // loads encoded bytes size
   head -> topoSize = loadTopoSize(file); // loads topology bytes size 
   head -> unencodedSize = loadUnencodedSize(file); // loads unencoded bytes sizez
-  
-  // fprintf(stdout, "Encoded Size: %ld\n", head -> encodedSize);
-  // fprintf(stdout, "Topology Size: %ld\n", head -> topoSize);
-  // fprintf(stdout, "Unencoded Size: %ld\n", head -> unencodedSize);
 
   loadTree(file);
 
@@ -42,7 +38,7 @@ long loadUnencodedSize(FILE * file){
 }
 
 void loadTree(FILE * file){
-  /*
+  
   char character;
   unsigned char * array = malloc(sizeof(char) * 10);
 
@@ -76,6 +72,7 @@ void loadTree(FILE * file){
     printf("%c", char_arr[c]);
   }
 
+/*
                0
               /
             0
