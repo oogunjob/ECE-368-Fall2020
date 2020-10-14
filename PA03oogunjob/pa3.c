@@ -16,5 +16,10 @@ int main(int argc, char * * argv){
   // loads the root of the tree from the file
   Node *root = Load_Tree_From_File(argv[1], &resistance, &per_unit_length_resistance, &per_unit_length_capacitance);
   
+  FILE * file = fopen(argv[2], "w"); // opens first output file
+  Print_Pre_Order_Tree(file, root); // prints the pre-order traversal of the tree
+  
+  fclose(file); // closes the output file
+
   return EXIT_SUCCESS; // exits program 
 }
