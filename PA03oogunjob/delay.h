@@ -21,6 +21,10 @@ Node *top(Stack *stack);
 
 void push(Stack *stack, Node *node);
 void Print_Pre_Order_Tree(FILE *file, Node *node);
+void Compute_Resistance_Capacitance(char *filename, Node *root, double resistance, double capacitance);
+void Print_Resistance_Capacitance(Node *node);
+void computeResistance(Node *node, double resistance);
+void computeCapacitance(Node *node, double capacitance);
 void deleteTree(Node *root);
 
 #endif
