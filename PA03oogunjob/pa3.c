@@ -21,5 +21,7 @@ int main(int argc, char * * argv){
   
   fclose(file); // closes the output file
 
+  deleteTree(root); // deletes the binary search tree
+
   return EXIT_SUCCESS; // exits program 
 }

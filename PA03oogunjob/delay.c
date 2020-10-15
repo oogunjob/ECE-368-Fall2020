@@ -19,12 +19,16 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
 
   while(fgets(line, sizeof(line), file)){
     if(line[0] != '('){
-      sscanf(line, "%d(%le)\n", &sink, &capacitance);
+      sscanf(line, "%d(%le)\n", &sink, &capacitance); // reads the sink and capacitance of the node
       
       // creates wire node with sink and capacitance
       Node * leafNode = malloc(sizeof(*leafNode));
       leafNode -> sink = sink;
       leafNode -> capacitance = capacitance;
+
+      // assigns NULL pointers to left and right nodes of current node
+      leafNode -> left = NULL;
+      leafNode -> right = NULL;
     
       push(stack, leafNode); // pushes node to the stack
     }
@@ -111,7 +115,7 @@ void deleteTree(Node *node)  {
 
   deleteTree(node -> left); // traverses left side of the node
   deleteTree(node -> right); // traverses right side of the node
- 
+  
   free(node); // free the allocated memory of the node
   
   return;
