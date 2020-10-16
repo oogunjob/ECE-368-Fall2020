@@ -10,21 +10,22 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
   
   char line[100]; // individual line read from the file
   
-  int sink; // sink of the wire
+  int label; // label of the wire
   double capacitance; // capacitance of the wire
+  
   double leftLength; // length from left wire to parent node
-  double rightLength; 
+  double rightLength; // length from right wire to parent node
 
   Stack * stack = malloc(sizeof(*stack)); // creates stack
 
   while(fgets(line, sizeof(line), file)){
     if(line[0] != '('){
-      sscanf(line, "%d(%le)\n", &sink, &capacitance); // reads the sink and capacitance of the node
+      sscanf(line, "%d(%le)\n", &label, &capacitance); // reads the sink and capacitance of the node
       
       // creates wire node with sink and capacitance
       Node * leafNode = malloc(sizeof(*leafNode));
-      leafNode -> sink = sink;
-      leafNode -> capacitance = capacitance;
+      leafNode -> label = label;
+      leafNode -> sink = capacitance;
 
       // assigns NULL pointers to left and right nodes of current node
       leafNode -> left = NULL;
@@ -35,8 +36,8 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
     else{
       // creates non-leaf wire node
       Node * nonLeafNode = malloc(sizeof(*nonLeafNode));
-      nonLeafNode -> sink = -1;
-      nonLeafNode -> capacitance = -1;
+      nonLeafNode -> label = -1;
+      nonLeafNode -> sink = 0;
 
       // scans in lengths of left and right node
       sscanf(line, "(%le %le)\n", &leftLength, &rightLength); 
@@ -90,11 +91,11 @@ void Print_Pre_Order_Tree(FILE *file, Node *node){
   }
   
   // traverses the right of the subtree
-  if(node -> sink == -1){
+  if(node -> label == -1){
     fprintf(file, "(%le %le)\n", node -> left -> length, node -> right -> length);
   }
   else{
-    fprintf(file, "%d(%le)\n", node -> sink, node -> capacitance);   
+    fprintf(file, "%d(%le)\n", node -> label, node -> sink);   
   }
 
   // traverses the right of the subtree
@@ -106,12 +107,12 @@ void Print_Pre_Order_Tree(FILE *file, Node *node){
   return;
 }     
 
-void Compute_Resistance_Capacitance(char *filename, Node *root, double resistance, double capacitance){
+void Compute_Resistance_Capacitance(char *filename, Node *root, double sourceResistance, double resistance, double capacitance){
   FILE * file = fopen(filename, "w");
   
-  computeResistance(root, resistance); // computes the resistance of each node in the binary tree
+  computeResistance(root, sourceResistance, resistance); // computes the resistance of each node in the binary tree
   computeCapacitance(root, capacitance); // computes the capacitance of each node in the binary tree
-  
+
   Print_Resistance_Capacitance(root); // prints the resistance and capacitance to the output file
   
   fclose(file); // closes the file
@@ -119,19 +120,25 @@ void Compute_Resistance_Capacitance(char *filename, Node *root, double resistanc
   return;
 }
 
-void computeResistance(Node *node, double resistance){ 
+void computeResistance(Node *node, double sourceResistance, double resistance){ 
   if (node == NULL){ 
     return; 
   }
-  fprintf(stdout, "The sink of this node is: %d\n", node -> sink);
 
-  node -> resistance = (resistance) * (node -> length); // computes the resistance of the individual node
+  // assigns the resistance to the root of the binary tree
+  if(node -> length == 0){
+    node -> resistance = sourceResistance; // will need to fix this (if the length is nothing in main, assign the resistance)
+  }
+  // computes the resistance of the individual node
+  else{
+  node -> resistance = (resistance) * (node -> length); 
+  }
 
   // traverses the right of the subtree
-  computeResistance(node -> left, resistance);   
+  computeResistance(node -> left, sourceResistance, resistance);   
   
   // traverses the right of the subtree
-  computeResistance(node -> right, resistance); 
+  computeResistance(node -> right, sourceResistance, resistance); 
 
   return;
 }    
@@ -141,15 +148,17 @@ void computeCapacitance(Node *node, double capacitance){
     return; 
   }
   
-  if(node -> sink != -1){
+  if(node -> label != -1){
     // computes the capacitance of the individual leaf node
     node -> capacitance = ((capacitance) * (node -> length) / 2) + (node -> sink);
-    // fprintf(stdout, "The capacitance is: %le\n", node -> capacitance);
   }
+  
   else{
     // computes the capacitance of the individual non-leaf node
-    node -> capacitance = (capacitance) * (node -> length) / 2;
-    // fprintf(stdout, "The capacitance is: %le\n", node -> capacitance);
+    double leftCapacitance = (node -> left -> length) * (capacitance) / 2; // capacitance of the left node
+    double rightCapacitance = (node -> right -> length) * (capacitance) / 2; // capacitance of the right node
+
+    node -> capacitance = leftCapacitance + rightCapacitance + (node -> length * capacitance / 2); // computes the capacitance of the node
   }
 
   // traverses the right of the subtree
@@ -167,11 +176,11 @@ void Print_Resistance_Capacitance(Node * node){
   }
 
   // traverses the right of the subtree
-  if(node -> sink == -1){
+  if(node -> label == -1){
     fprintf(stdout, "(%le %le)\n", node -> resistance, node -> capacitance);
   }
   else{
-    fprintf(stdout, "%d(%le %le)\n", node -> sink, node -> resistance, node -> capacitance);   
+    fprintf(stdout, "%d(%le %le)\n", node -> label, node -> resistance, node -> capacitance);   
   }
 
   // traverses the right of the subtree

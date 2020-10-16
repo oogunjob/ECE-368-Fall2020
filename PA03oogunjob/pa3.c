@@ -21,7 +21,7 @@ int main(int argc, char * * argv){
   fclose(file); // closes the first output file
 
   // prints the resistance and capacitance of each node to the given output file
-  Compute_Resistance_Capacitance(argv[3], root, per_unit_length_resistance, per_unit_length_capacitance);
+  Compute_Resistance_Capacitance(argv[3], root, resistance, per_unit_length_resistance, per_unit_length_capacitance);
 
   deleteTree(root); // deletes the binary search tree
 
