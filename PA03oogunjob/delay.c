@@ -22,7 +22,7 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
     if(line[0] != '('){
       sscanf(line, "%d(%le)\n", &label, &capacitance); // reads the sink and capacitance of the node
       
-      // creates wire node with sink and capacitance
+      // creates leaf node with sink and capacitance
       Node * leafNode = malloc(sizeof(*leafNode));
       leafNode -> label = label;
       leafNode -> sink = capacitance;
@@ -110,6 +110,8 @@ void Print_Pre_Order_Tree(FILE *file, Node *node){
 void Compute_Resistance_Capacitance(char *filename, Node *root, double sourceResistance, double resistance, double capacitance){
   FILE * file = fopen(filename, "w");
   
+  root -> length = 0; // assigns the length of the root node as 0
+  
   computeResistance(root, sourceResistance, resistance); // computes the resistance of each node in the binary tree
   computeCapacitance(root, capacitance); // computes the capacitance of each node in the binary tree
 
@@ -127,7 +129,7 @@ void computeResistance(Node *node, double sourceResistance, double resistance){
 
   // assigns the resistance to the root of the binary tree
   if(node -> length == 0){
-    node -> resistance = sourceResistance; // will need to fix this (if the length is nothing in main, assign the resistance)
+    node -> resistance = sourceResistance;
   }
   // computes the resistance of the individual node
   else{
