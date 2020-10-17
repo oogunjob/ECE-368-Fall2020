@@ -22,6 +22,14 @@ int main(int argc, char * * argv){
 
   // prints the resistance and capacitance of each node to the given output file
   Compute_Resistance_Capacitance(argv[3], root, resistance, per_unit_length_resistance, per_unit_length_capacitance);
+  
+  // prints the total capacitance of each sub-tree in the binary tree
+  root -> totalCapacitance = Compute_Total_Capacitance(root); // computes the total capacitance of each subtree in the binary tree
+  file = fopen(argv[4], "w");
+  Print_Total_Capacitance(file, root); // prints the total capacitance values to the output file
+  fclose(file); // closes third output file
+
+
 
   deleteTree(root); // deletes the binary search tree
 

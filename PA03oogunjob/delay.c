@@ -108,14 +108,14 @@ void Print_Pre_Order_Tree(FILE *file, Node *node){
 }     
 
 void Compute_Resistance_Capacitance(char *filename, Node *root, double sourceResistance, double resistance, double capacitance){
-  FILE * file = fopen(filename, "w");
+  FILE * file = fopen(filename, "wb");
   
   root -> length = 0; // assigns the length of the root node as 0
   
   computeResistance(root, sourceResistance, resistance); // computes the resistance of each node in the binary tree
   computeCapacitance(root, capacitance); // computes the capacitance of each node in the binary tree
 
-  Print_Resistance_Capacitance(root); // prints the resistance and capacitance to the output file
+  Print_Resistance_Capacitance(file, root); // prints the resistance and capacitance to the output file
   
   fclose(file); // closes the file
 
@@ -172,31 +172,62 @@ void computeCapacitance(Node *node, double capacitance){
   return;
 }  
 
-void Print_Resistance_Capacitance(Node * node){
+void Print_Resistance_Capacitance(FILE * file, Node * node){
   if(node == NULL){ 
     return; 
   }
 
   // traverses the right of the subtree
   if(node -> label == -1){
-    fprintf(stdout, "(%le %le)\n", node -> resistance, node -> capacitance);
+    fprintf(file, "(%le %le)\n", node -> resistance, node -> capacitance);
   }
   else{
-    fprintf(stdout, "%d(%le %le)\n", node -> label, node -> resistance, node -> capacitance);   
+    fprintf(file, "%d(%le %le)\n", node -> label, node -> resistance, node -> capacitance);   
   }
 
   // traverses the right of the subtree
-  Print_Resistance_Capacitance(node -> left);   
+  Print_Resistance_Capacitance(file, node -> left);   
   
   // traverses the right of the subtree
-  Print_Resistance_Capacitance(node -> right); 
+  Print_Resistance_Capacitance(file, node -> right); 
 
   return;
 }
 
+double Compute_Total_Capacitance(Node *node){
+  if(node == NULL){
+    return 0;
+  }
+  
+  // computes the capacitance of each sub tree
+  double sum = node -> capacitance + Compute_Total_Capacitance(node -> left) + Compute_Total_Capacitance(node -> right);
+  
+  node -> totalCapacitance = sum; // stores the total capacitance of the sub-tree in the specific node
 
+  return sum; // returns the current to the calling function
+}
 
+void Print_Total_Capacitance(FILE * file, Node * node){
+  if(node == NULL){ 
+    return; 
+  }
 
+  // traverses the right of the subtree
+  if(node -> label == -1){
+    fprintf(file, "(%le)\n", node -> totalCapacitance);
+  }
+  else{
+    fprintf(file, "%d(%le)\n", node -> label, node -> totalCapacitance);   
+  }
+
+  // traverses the right of the subtree
+  Print_Total_Capacitance(file, node -> left);   
+  
+  // traverses the right of the subtree
+  Print_Total_Capacitance(file, node -> right); 
+
+  return;
+}
 
 
 
