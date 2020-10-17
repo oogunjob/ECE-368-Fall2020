@@ -25,12 +25,12 @@ int main(int argc, char * * argv){
   
   // prints the total capacitance of each sub-tree in the binary tree
   root -> totalCapacitance = Compute_Total_Capacitance(root); // computes the total capacitance of each subtree in the binary tree
-  file = fopen(argv[4], "w");
+  file = fopen(argv[4], "wb");
   Print_Total_Capacitance(file, root); // prints the total capacitance values to the output file
   fclose(file); // closes third output file
-
-
-
+     
+  
+  
   deleteTree(root); // deletes the binary search tree
 
   return EXIT_SUCCESS; // exits program 

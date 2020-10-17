@@ -177,13 +177,10 @@ void Print_Resistance_Capacitance(FILE * file, Node * node){
     return; 
   }
 
-  // traverses the right of the subtree
-  if(node -> label == -1){
-    fprintf(file, "(%le %le)\n", node -> resistance, node -> capacitance);
-  }
-  else{
-    fprintf(file, "%d(%le %le)\n", node -> label, node -> resistance, node -> capacitance);   
-  }
+  // prints the node's information
+  fwrite(&(node -> label), sizeof(int), 1, file);
+  fwrite(&(node -> resistance), sizeof(double), 1, file);
+  fwrite(&(node -> capacitance), sizeof(double), 1, file);
 
   // traverses the right of the subtree
   Print_Resistance_Capacitance(file, node -> left);   
@@ -212,13 +209,9 @@ void Print_Total_Capacitance(FILE * file, Node * node){
     return; 
   }
 
-  // traverses the right of the subtree
-  if(node -> label == -1){
-    fprintf(file, "(%le)\n", node -> totalCapacitance);
-  }
-  else{
-    fprintf(file, "%d(%le)\n", node -> label, node -> totalCapacitance);   
-  }
+  // prints the node's information
+  fwrite(&(node -> label), sizeof(int), 1, file);
+  fwrite(&(node -> totalCapacitance), sizeof(double), 1, file);
 
   // traverses the right of the subtree
   Print_Total_Capacitance(file, node -> left);   
@@ -228,22 +221,6 @@ void Print_Total_Capacitance(FILE * file, Node * node){
 
   return;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void deleteTree(Node *node)  { 
   // if node is empty, do nothing
@@ -258,8 +235,6 @@ void deleteTree(Node *node)  {
   
   return;
 }
-
-
   // tree is given in POST ORDER format
   // leaf node (which is a sink), printed with the format "%d(%le)\n 
   // integer represents the label of the sink, double represents the node capacitance
