@@ -31,6 +31,8 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
       leafNode -> left = NULL;
       leafNode -> right = NULL;
     
+      leafNode -> isRoot = 0; // identifies that the node is not the root of the tree
+
       push(stack, leafNode); // pushes node to the stack
     }
     else{
@@ -50,6 +52,8 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
       nonLeafNode -> left = top(stack);
       nonLeafNode -> left -> length = leftLength;
 
+      nonLeafNode -> isRoot = 0; // identifies that the node is not the root of the tree
+
       // pushes tree to the stack
       push(stack, nonLeafNode); 
     }
@@ -59,6 +63,8 @@ Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_l
   
   // stores the top of the stack in root node and frees allocated memory of the stack
   Node * root = stack -> top;
+  root -> isRoot = 1; // identifies that the node is the root of the tree
+
   free(stack);
 
   return root; // returns the root of the binary tree
@@ -90,7 +96,7 @@ void Print_Pre_Order_Tree(FILE *file, Node *node){
     return; 
   }
   
-  // traverses the right of the subtree
+  // prints node
   if(node -> label == -1){
     fprintf(file, "(%le %le)\n", node -> left -> length, node -> right -> length);
   }
@@ -220,9 +226,76 @@ void Print_Total_Capacitance(FILE * file, Node * node){
   Print_Total_Capacitance(file, node -> right); 
 
   return;
+} 
+
+double Compute_Root_Delay(Node *node, double resistance){ 
+  if(node == NULL){ 
+    return 0; 
+  }
+  
+  double timeConstant = node -> capacitance * (resistance * resistance); // computes time constant of the node
+  return timeConstant + Compute_Root_Delay(node -> left, resistance) + Compute_Root_Delay(node -> right, resistance); // returns summation of time constant of every node in binary tree
 }
 
-void deleteTree(Node *node)  { 
+void Compute_Delay(Node *node, double resistance, double previousDelay){
+  if(node == NULL){
+    return;
+  }
+
+  // if it is the root of the tree, perform the traversal of both sides of the tree
+  if(node -> isRoot == 1){
+    Compute_Delay(node -> left, resistance, node -> delay);
+    Compute_Delay(node -> right, resistance, node -> delay);
+
+    return;
+  }
+
+  if(node -> label == -1){
+    double delay; // delay of the node
+    double totalCapacitance = node -> totalCapacitance; // total capacitance of the sub-tree
+
+    delay = previousDelay - (totalCapacitance * resistance * resistance) + ((totalCapacitance) * ((resistance + node -> resistance) * (resistance + node -> resistance)));
+    node -> delay = delay; // assigns the delay to the node
+
+    Compute_Delay(node -> left, resistance + node -> resistance, node -> delay);
+    Compute_Delay(node -> right, resistance + node -> resistance, node -> delay);
+  }
+
+
+  else if(node -> label != -1){
+    double delay; // delay of the node
+    double capacitance = node -> capacitance; // capacitance of the node
+
+    delay = previousDelay - capacitance * (resistance * resistance) + capacitance * ((resistance + node -> resistance) * (resistance + node -> resistance));
+    
+    delay = (1 / (resistance + node -> resistance)) * delay; // computes the delay
+    node -> delay = delay; // assigns the delay to the node
+  }
+
+  return;
+}
+
+void Print_In_Order_Tree(FILE *file, Node *node){ 
+  if (node == NULL){ 
+    return; 
+  }
+
+  // traverses the right of the subtree
+  Print_In_Order_Tree(file, node -> left);   
+
+  // prints node's delay value
+  if(node -> label != -1){
+    fwrite(&(node -> label), sizeof(int), 1, file);
+    fwrite(&(node -> delay), sizeof(double), 1, file);
+  }
+
+  // traverses the right of the subtree
+  Print_In_Order_Tree(file, node -> right); 
+
+  return;
+}
+
+void deleteTree(Node *node){ 
   // if node is empty, do nothing
   if(node == NULL){
     return;
@@ -235,9 +308,3 @@ void deleteTree(Node *node)  {
   
   return;
 }
-  // tree is given in POST ORDER format
-  // leaf node (which is a sink), printed with the format "%d(%le)\n 
-  // integer represents the label of the sink, double represents the node capacitance
-
-  // non-leaf node, printed with the format "(%le %le)\n", 
-  // where the first double is the wire length to the left child, second double is the wire length to the right child
