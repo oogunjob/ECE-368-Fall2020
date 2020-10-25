@@ -30,15 +30,13 @@ int main(int argc, char * * argv){
   Print_Total_Capacitance(file, root); // prints the total capacitance values to the output file
   fclose(file); // closes third output file
 
-
   // prints the delay of each node to the file
   root -> delay = (1 / root -> resistance) * Compute_Root_Delay(root, root -> resistance);
   Compute_Delay(root, root -> resistance, root -> delay);
 
-  file = fopen(argv[5], "wb");
+  file = fopen(argv[5], "w");
   Print_In_Order_Tree(file, root);
   fclose(file);
-
 
   deleteTree(root); // deletes the binary search tree
 

@@ -286,7 +286,10 @@ void Print_In_Order_Tree(FILE *file, Node *node){
   // prints node's delay value
   if(node -> label != -1){
     fwrite(&(node -> label), sizeof(int), 1, file);
+    fprintf(stdout, "%d", node -> label);
+    
     fwrite(&(node -> delay), sizeof(double), 1, file);
+    fprintf(stdout, "(%le)\n", node -> delay);
   }
 
   // traverses the right of the subtree
