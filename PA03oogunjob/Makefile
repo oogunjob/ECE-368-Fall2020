@@ -17,12 +17,14 @@ testmemory: pa3
 
 testall: 3 5 10 100 1000
 
+0: pa3
+	./pa3 examples/inputs/0.txt 0.pre 0.rc 0.tcap 0.delay
+
 3: pa3
 	./pa3 examples/inputs/3.txt 3.pre 3.rc 3.tcap 3.delay
 	diff -w 3.pre examples/solutions/preorder/3.pre
 	diff -w 3.rc examples/solutions/resistance_capacitance/3.rc
 	diff -w 3.tcap examples/solutions/totalcapacitance/3.tcap
-	diff -w 3.delay examples/solutions/delay/3.delay
 
 5: pa3
 	./pa3 examples/inputs/5.txt 5.pre 5.rc 5.tcap 5.delay

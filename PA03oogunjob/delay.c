@@ -2,8 +2,19 @@
 #include <stdlib.h>
 #include "delay.h"
 
-Node *Load_Tree_From_File(char *filename, double *resistance, double *per_unit_length_resistance, double *per_unit_length_capacitance){
-  FILE * file = fopen(filename, "r"); // opens input file
+Node *Load_Tree_From_File(FILE *file, double *resistance, double *per_unit_length_resistance, double *per_unit_length_capacitance){
+  // checks if the file is empty or not
+  fseek(file, 0, SEEK_END);
+  int size = ftell(file);
+  
+  // if empty, return NULL to root node
+  if(size == 0){
+    fclose(file);
+    return NULL;
+  }
+
+  // if file is not empty, continue loading binary search tree
+  fseek(file, 0, SEEK_SET);
 
   // stores the first line's data into the three variables
   fscanf(file, "%le %le %le\n", resistance, per_unit_length_resistance, per_unit_length_capacitance);
@@ -114,8 +125,14 @@ void Print_Pre_Order_Tree(FILE *file, Node *node){
 }     
 
 void Compute_Resistance_Capacitance(char *filename, Node *root, double sourceResistance, double resistance, double capacitance){
-  FILE * file = fopen(filename, "wb");
+  FILE * file = fopen(filename, "wb"); // opens to be written
   
+  // if the binary tree is empty, print nothing to file
+  if(root == NULL){
+    fclose(file);
+    return;
+  }
+
   root -> length = 0; // assigns the length of the root node as 0
   
   computeResistance(root, sourceResistance, resistance); // computes the resistance of each node in the binary tree
@@ -286,10 +303,7 @@ void Print_In_Order_Tree(FILE *file, Node *node){
   // prints node's delay value
   if(node -> label != -1){
     fwrite(&(node -> label), sizeof(int), 1, file);
-    fprintf(stdout, "%d", node -> label);
-    
     fwrite(&(node -> delay), sizeof(double), 1, file);
-    fprintf(stdout, "(%le)\n", node -> delay);
   }
 
   // traverses the right of the subtree
