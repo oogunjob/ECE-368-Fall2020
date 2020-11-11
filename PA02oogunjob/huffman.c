@@ -13,9 +13,12 @@ HBTFile * openFile(char * filename){
   fread(&(head -> topoSize), sizeof(long), 1, file); // loads topology bytes size 
   fread(&(head -> unencodedSize), sizeof(long), 1, file); // loads unencoded bytes size
 
+  // will not these lines of code
+  /*
   fprintf(stdout, "Encoded Size: %ld\n", head -> encodedSize);
   fprintf(stdout, "Topology Size: %ld\n", head -> topoSize);
   fprintf(stdout, "Unencoded Size: %ld\n", head -> unencodedSize);
+  */
 
   loadTree(file, head, head -> topoSize);
 
@@ -26,17 +29,16 @@ HBTFile * openFile(char * filename){
 void loadTree(FILE * file, HBTFile * HBT, long topoSize){
   int * bitArray = decodeInput(file, topoSize); // array that holds the bytes read from file
   
-  int count = 0; // loop control variable
   int size = 0; // size of the bytes read
-  
   int * decodedArray = malloc(sizeof(*decodedArray) * size); // the array that stores all the numbers 
 
-  int index = 0;
-  int ascii;
-  uint8_t ascii_temp;
-  uint8_t ascii_temp1;
-  uint8_t ascii_result = 0x0;
+  int count = 0; // loop control variable
+  int index = 0; // index control of the array
+  int ASCII; // ASCII character code
 
+  uint8_t tempASCII; // temporary ASCII value
+  uint8_t ASCIIHelper; // helper to tempASCII
+  uint8_t result = 0x0;
 
   while(count < (topoSize * 8)){
     if(bitArray[count] == 0){
@@ -55,36 +57,49 @@ void loadTree(FILE * file, HBTFile * HBT, long topoSize){
 
       index += 1; // updates index in array
 
-      ascii = concat(bitArray[count+1], bitArray[count + 2], bitArray[count + 3], bitArray[count+4], bitArray[count+5], bitArray[count + 6], bitArray[count + 7], bitArray[count + 8]);
-      ascii = convert_to_decimal(ascii);
+      ASCII = concatenate(bitArray[count + 1], bitArray[count + 2], bitArray[count + 3], bitArray[count + 4], bitArray[count + 5], bitArray[count + 6], bitArray[count + 7], bitArray[count + 8]);
+      ASCII = convert2decimal(ASCII);
             
-      ascii_temp = (uint8_t) ascii;
+      tempASCII = (uint8_t) ASCII;
 
+      // used to update the resultant character that will be used to store in decoded array
       for(int i = 7; i >= 0; i--){
-        ascii_temp1 = ascii_temp >> (7-i);
-        ascii_temp1 = ascii_temp1 << 7;
-        ascii_temp1 = ascii_temp1 >> (7-i);
-        ascii_result = ascii_result | ascii_temp1;
+        ASCIIHelper = tempASCII >> (7 - i);
+        ASCIIHelper = ASCIIHelper << 7;
+        ASCIIHelper = ASCIIHelper >> (7 - i);
+        result = result | ASCIIHelper;
       }
 
-      ascii = (int) ascii_result;
-      ascii_result = 0x0;
+      ASCII = (int) result;
+      result = 0x0;
 
-      size++;
-      decodedArray = realloc(decodedArray, sizeof(*decodedArray) * size);
-      decodedArray[index] = ascii; // important
+      size += 1; // increments size
       
-      count = count + 9;
-      index++;
+      decodedArray = realloc(decodedArray, sizeof(*decodedArray) * size); // resizes the decoded array
+      decodedArray[index] = ASCII; // important
+      
+      count += 9; // increments count by 9
+      index += 1; // increments index by 1
     }
   }
   
+  // computes where to stop in the array without the need of the extra padded zeros
+  count = 1;
+  int num = decodedArray[size - count];
+  while(num == 0){
+    num = decodedArray[size - ++count];
+  }
+  count--; // subtracts one from the count to account for extra iteration
+  
+  // Will not be needing these lines of code
+  /*
   for(count = 0; count < size; count++){
     fprintf(stdout, "%d ", decodedArray[count]);
   }
   fprintf(stdout, "\n"); // new line
+  */
 
-  HBTNode * root = buildTree(decodedArray, size); // builds binary tree from array
+  HBTNode * root = buildTree(decodedArray, size - count); // builds binary tree from array
   HBT -> tree = root; // assings root of binary tree to HBTFile
 
   // frees both bitArray and decodedArray
@@ -97,12 +112,11 @@ void loadTree(FILE * file, HBTFile * HBT, long topoSize){
 HBTNode * buildTree(int * array, int size){
   HBTNode * head = NULL; // head of the binary tree
   HBTNode * current = NULL; // current node in the binary tree
-  HBTNode * deletedNode = NULL; // node used to 
+  HBTNode * deletedNode = NULL; // node poppped from the stack
 
   STACK * Stack = malloc(sizeof(*Stack)); // creates the new stack
   
   int data; // data read from the array
-  fprintf(stdout, "The size of this shit is: %d\n", size);
 
   // need to change back to size
   for(int count = 0; count < size - 1; count++){
@@ -118,13 +132,13 @@ HBTNode * buildTree(int * array, int size){
       }
       // if the head of the linked list is a leaf node, assign next data point
       else if (data == 1){
-        // might even need to add a while loop here
         head -> data = array[++count];
       }
     }
 
     else if(Stack -> top -> left == NULL){
       Stack -> top -> left = createNode(data); // creates node to the left of the node in stack
+
       // if the node is not a leaf node, add it to the stack
       if(data == 0){
         push(Stack, Stack -> top -> left); // pushes the node to the stack
@@ -137,10 +151,12 @@ HBTNode * buildTree(int * array, int size){
 
     else if(Stack -> top -> right == NULL){
       Stack -> top -> right = createNode(data);
+
       // if the node is not a leaf node, add it to the stack
       if(data == 0){
         current = Stack -> top -> right;
-        deletedNode = top(Stack); 
+        deletedNode = top(Stack);
+        deletedNode -> data += 0; // adds nothing to deleted node data to remove gcc warning   
         
         push(Stack, current);
       }
@@ -155,18 +171,6 @@ HBTNode * buildTree(int * array, int size){
   free(Stack); // frees allocated memory for stack
 
   return head;
-}
-
-HBTNode * createNode(int data){
-  HBTNode * temp = malloc(sizeof(*temp)); // allocates memory for the node
-  temp -> data = data; // assigns data to data attribute of node
-
-  // assigns NULL pointers to left, right, and next of the node
-  temp -> left = NULL;
-  temp -> right = NULL;
-  temp -> next = NULL;
-
-  return temp; // returns temp node
 }
 
 int * decodeInput(FILE * file, long topoSize){
@@ -193,55 +197,69 @@ int * decodeInput(FILE * file, long topoSize){
   return bitArray;
 }
 
-
-
-int convert_to_decimal(int n) {
-  int dec = 0;
-  int i = 0;
-  int rem = 0;
+int convert2decimal(int num) {
+  int count = 0; // count in loop
+  int decimal = 0; // decimal conversion
+  int remainder = 0; // remainder of the modulus operation
+  
+  // while loop that will compute decimal value while the number is not equal to 0
+  while(num != 0) {
+    remainder = num % 10;
+    num = num / 10;
     
-  while(n != 0) {
-    rem = n % 10;
-    n /= 10;
-    dec += rem * pow(2, i);
-    i++;
+    decimal += remainder * pow(2, count); // computes the decimal value
+    count += 1; // increments count by 1
   }
     
-  return dec;
+  return decimal;
 }
 
-int concat(int a, int b, int c, int d, int e, int f, int g, int h){ 
+int concatenate(int a, int b, int c, int d, int e, int f, int g, int h){ 
+  // will need to come back and update this function
+  char s1[20]; 
+  char s2[20]; 
+  char s3[20]; 
+  char s4[20]; 
+  char s5[20]; 
+  char s6[20]; 
+  char s7[20]; 
+  char s8[20]; 
+
+  int result; // result of the concatenation
   
-    char s1[20]; 
-    char s2[20]; 
-    char s3[20]; 
-    char s4[20]; 
-    char s5[20]; 
-    char s6[20]; 
-    char s7[20]; 
-    char s8[20]; 
+  sprintf(s1, "%d", a); 
+  sprintf(s2, "%d", b);
+  sprintf(s3, "%d", c); 
+  sprintf(s4, "%d", d); 
+  sprintf(s5, "%d", e); 
+  sprintf(s6, "%d", f); 
+  sprintf(s7, "%d", g); 
+  sprintf(s8, "%d", h); 
   
-    sprintf(s1, "%d", a); 
-    sprintf(s2, "%d", b);
-    sprintf(s3, "%d", c); 
-    sprintf(s4, "%d", d); 
-    sprintf(s5, "%d", e); 
-    sprintf(s6, "%d", f); 
-    sprintf(s7, "%d", g); 
-    sprintf(s8, "%d", h); 
+  strcat(s1, s2);
+  strcat(s1, s3); 
+  strcat(s1, s4); 
+  strcat(s1, s5);  
+  strcat(s1, s6); 
+  strcat(s1, s7); 
+  strcat(s1, s8); 
   
-    strcat(s1, s2);
-    strcat(s1, s3); 
-    strcat(s1, s4); 
-    strcat(s1, s5);  
-    strcat(s1, s6); 
-    strcat(s1, s7); 
-    strcat(s1, s8); 
+  result = atoi(s1);
   
-    int result = atoi(s1);
-  
-    return result; 
+  return result; 
 } 
+
+HBTNode * createNode(int data){
+  HBTNode * temp = malloc(sizeof(*temp)); // allocates memory for the node
+  temp -> data = data; // assigns data to data attribute of node
+
+  // assigns NULL pointers to left, right, and next of the node
+  temp -> left = NULL;
+  temp -> right = NULL;
+  temp -> next = NULL;
+
+  return temp; // returns temp node
+}
 
 void push(STACK * Stack, HBTNode *node){
   // if the stack is empty, push the node to the top of the stack
@@ -264,27 +282,29 @@ HBTNode *top(STACK *stack){
   return current; // returns the previous top node
 }
 
+
+static int isLeafNode(HBTNode * node){
+  // determines if node is leaf node or not
+  if(node -> left == NULL && node -> right == NULL){
+    return 1;
+  }
+  return 0;
+}
+
 void printTree(FILE * file, HBTNode* node) { 
   if(node == NULL){ 
     return;
   }
-
-  if(node -> left == NULL && node -> right == NULL){
-    fprintf(file, "%d", 1);
-  }
-
-  if(node -> data != 0){
-    // prints node character
+   
+  // if the node is a leaf node, print a 1 prior to its data
+  if(isLeafNode(node)){
+    fprintf(file, "%c", '1');
     fprintf(file, "%c", node -> data);
   }
   else{
-    // prints node integer data
-    fprintf(file, "%d", node -> data);
+    fprintf(file, "%c", '0');
   }
 
-
-  // fprintf(file, "%d ", node -> data);
-  
   // traverses the left side of the tree
   printTree(file, node -> left);   
 
@@ -302,5 +322,6 @@ void deleteTree(HBTNode *node){
   deleteTree(node -> right); // traverses right side of the node
   
   free(node); // free the allocated memory of the node
+
   return;
 }

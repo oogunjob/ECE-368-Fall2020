@@ -20,9 +20,12 @@ int main(int argc, char ** argv){
 
   HBTFile * HBT = openFile(argv[1]); // loads the information stored in input file into HBT file
   
+  // creates output for argv[2]
   FILE * file = fopen(argv[2], "w"); // opens up file to be written to
-  printTree(file, HBT -> tree); // prints tree
+  printTree(file, HBT -> tree); // prints tree in pre-order traversal to output file
+  fclose(file); // closes the file
 
+  
   deleteTree(HBT -> tree);
   free(HBT); // frees the HBT File
 

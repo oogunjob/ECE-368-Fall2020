@@ -29,8 +29,8 @@ HBTNode *top(STACK *stack);
 HBTNode * buildTree(int * array, int size);
 HBTNode * createNode(int data);
 
-int concat(int a, int b, int c, int d, int e, int f, int g, int h);
-int convert_to_decimal(int n);
+int concatenate(int a, int b, int c, int d, int e, int f, int g, int h);
+int convert2decimal(int num);
 int * decodeInput(FILE * file, long topoSize);
 
 void loadTree(FILE * file, HBTFile * HBT, long topoSize);
