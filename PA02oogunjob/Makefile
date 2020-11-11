@@ -1,7 +1,8 @@
-WARNING = -Wall -Wshadow -pedantic
+WARNING = -Wall -Wshadow -pedantic -lm
 ERROR = -Wvla
 GCC = gcc -std=c99 -g -O3 $(WARNING) $(ERROR)
 VAL = valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
+LIBS = -lm
 
 SRCS = pa2.c huffman.c
 OBJS = $(SRCS:%.c=%.o)
@@ -19,12 +20,15 @@ testall: gophers lorum stone woods binary1
 
 gophers: pa2
 	./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
+	diff -w gophers.tree tree/gophers_huff.tree
 
 lorum: pa2
 	./pa2 encoded/lorum_huff.hbt lorum.tree lorum.ori lorum.count lorum.htree lorum.eval
+	diff -w lorum.tree tree/lorum_huff.tree
 
 stone: pa2
 	./pa2 encoded/stone_huff.hbt stone.tree stone.ori stone.count stone.htree stone.eval
+	diff -w stone.tree tree/stone_huff.tree
 
 woods: pa2
 	./pa2 encoded/woods_huff.hbt woods.tree woods.ori woods.count woods.htree woods.eval

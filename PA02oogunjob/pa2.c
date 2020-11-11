@@ -19,9 +19,11 @@ int main(int argc, char ** argv){
   // argv[6] = output file for decoded file
 
   HBTFile * HBT = openFile(argv[1]); // loads the information stored in input file into HBT file
-  openFiles(argv[2], argv[3], argv[4], argv[5], argv[6]); // opens files
+  
+  FILE * file = fopen(argv[2], "w"); // opens up file to be written to
+  printTree(file, HBT -> tree); // prints tree
 
-
+  deleteTree(HBT -> tree);
   free(HBT); // frees the HBT File
 
   return EXIT_SUCCESS;
