@@ -4,7 +4,6 @@ GCC = gcc -std=c99 -g -O3 $(WARNING) $(ERROR) $(LIBS)
 LIBS = -lm
 VAL = valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
 
-
 SRCS = pa2.c huffman.c
 OBJS = $(SRCS:%.c=%.o)
 
@@ -15,13 +14,14 @@ pa2: $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: pa2
-	$(VAL) ./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
+	$(VAL) ./pa2 encoded/binary1_huff.hbt binary1.tree binary1.ori binary1.count binary1.htree binary1.eval
 
 testall: gophers lorum stone woods binary1
 
 gophers: pa2
 	./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
 	diff -w gophers.tree tree/gophers_huff.tree
+	diff -w gophers.ori decoded/gophers
 
 lorum: pa2
 	./pa2 encoded/lorum_huff.hbt lorum.tree lorum.ori lorum.count lorum.htree lorum.eval
@@ -38,6 +38,7 @@ woods: pa2
 binary1: pa2
 	./pa2 encoded/binary1_huff.hbt binary1.tree binary1.ori binary1.count binary1.htree binary1.eval
 	diff -w binary1.tree tree/binary1_huff.tree
+	diff -w binary1.ori decoded/binary1
 
 clean: # remove all machine generated files
 	rm -f pa2 *.o output?

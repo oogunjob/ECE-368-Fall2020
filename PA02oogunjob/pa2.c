@@ -25,7 +25,19 @@ int main(int argc, char ** argv){
   printTree(file, HBT -> tree); // prints tree in pre-order traversal to output file
   fclose(file); // closes the file
 
+  // creates output for argv[3]
+  file = fopen(argv[1], "rb");
+  printEncoded(file, argv[3], HBT); 
   
+  // creates output for argv[4]
+
+
+  // creates output for argv[5]
+
+  
+  // creates output for argv[6]
+
+
   deleteTree(HBT -> tree);
   free(HBT); // frees the HBT File
 

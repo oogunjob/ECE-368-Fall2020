@@ -5,6 +5,85 @@
 #include <string.h>
 #include "huffman.h"
 
+void printEncoded(FILE * file, char * filename, HBTFile * HBT){
+  long numberEncoded;
+  uint8_t temporary;
+  uint8_t byte;
+  
+  int count = 0;
+  int countByte = 0;
+  
+  int lcv; // loop control variable
+  int size; // size of the encodedArray
+
+  numberEncoded = HBT -> encodedSize - HBT -> topoSize - 24;
+
+  size = numberEncoded * 8; // computes the size of the encodedArray
+  fseek(file, HBT -> topoSize + 24, SEEK_SET); // sets file to begin at topology order
+  
+  fprintf(stdout, "The size is: %d\n", size);
+
+  int * encodedArray = malloc(sizeof(*encodedArray) * size);
+
+  // used to update the resultant character that will be used to store in encoded array 
+  while(count != numberEncoded){
+    fread(&byte, 1, 1, file);
+
+    for(lcv = 7; lcv >= 0; lcv--){
+      temporary = byte << lcv;
+      temporary = temporary >> 7;
+      
+      encodedArray[countByte] = (int) temporary;
+      countByte += 1;
+    }
+    count += 1;
+  }
+  
+  fclose(file); // closes the input file
+
+  count = 0;
+  lcv = 0;
+  
+  file = fopen(filename, "w"); // opens argv[3] to be written to
+  HBTNode * head = HBT -> tree;
+  HBTNode * current = head;
+
+  while(count != HBT -> unencodedSize){
+    countByte = encodedArray[lcv++]; // sets the count byte to the top number in the encoded array
+    
+    if(countByte == 0){
+      current = current -> left; // if the count byte is 0, traverse to the left of the tree
+      if(current == NULL){
+         break;
+       }
+    }
+    else{
+      current = current -> right; // if the count byte is 1, traverse to the left of the tree
+       if(current == NULL){
+         break;
+       }
+    }
+
+    if(current -> data > 0){
+      fprintf(file, "%c", current -> data);
+      current = head;
+      count++;
+    }
+  }
+
+
+
+
+
+
+
+
+
+  free(encodedArray);
+
+  return;
+}
+
 HBTFile * openFile(char * filename){
   FILE * file = fopen(filename, "rb"); // opens the input file
   HBTFile * head = malloc(sizeof(*head)); // allocates space for HBT file that will hold information
@@ -13,7 +92,6 @@ HBTFile * openFile(char * filename){
   fread(&(head -> topoSize), sizeof(long), 1, file); // loads topology bytes size 
   fread(&(head -> unencodedSize), sizeof(long), 1, file); // loads unencoded bytes size
 
-  // will not these lines of code
   /*
   fprintf(stdout, "Encoded Size: %ld\n", head -> encodedSize);
   fprintf(stdout, "Topology Size: %ld\n", head -> topoSize);
@@ -34,6 +112,7 @@ void loadTree(FILE * file, HBTFile * HBT, long topoSize){
 
   int count = 0; // loop control variable
   int index = 0; // index control of the array
+  int lcv; // loop control variable for ASCII helper
   int ASCII; // ASCII character code
 
   uint8_t tempASCII; // temporary ASCII value
@@ -63,10 +142,10 @@ void loadTree(FILE * file, HBTFile * HBT, long topoSize){
       tempASCII = (uint8_t) ASCII;
 
       // used to update the resultant character that will be used to store in decoded array
-      for(int i = 7; i >= 0; i--){
-        ASCIIHelper = tempASCII >> (7 - i);
+      for(lcv = 7; lcv >= 0; lcv--){
+        ASCIIHelper = tempASCII >> (7 - lcv);
         ASCIIHelper = ASCIIHelper << 7;
-        ASCIIHelper = ASCIIHelper >> (7 - i);
+        ASCIIHelper = ASCIIHelper >> (7 - lcv);
         result = result | ASCIIHelper;
       }
 
@@ -91,14 +170,6 @@ void loadTree(FILE * file, HBTFile * HBT, long topoSize){
   }
   count--; // subtracts one from the count to account for extra iteration
   
-  // Will not be needing these lines of code
-  /*
-  for(count = 0; count < size; count++){
-    fprintf(stdout, "%d ", decodedArray[count]);
-  }
-  fprintf(stdout, "\n"); // new line
-  */
-
   HBTNode * root = buildTree(decodedArray, size - count); // builds binary tree from array
   HBT -> tree = root; // assings root of binary tree to HBTFile
 
@@ -216,35 +287,35 @@ int convert2decimal(int num) {
 
 int concatenate(int a, int b, int c, int d, int e, int f, int g, int h){ 
   // will need to come back and update this function
-  char s1[20]; 
-  char s2[20]; 
-  char s3[20]; 
-  char s4[20]; 
-  char s5[20]; 
-  char s6[20]; 
-  char s7[20]; 
-  char s8[20]; 
+  char string1[20]; 
+  char string2[20]; 
+  char string3[20]; 
+  char string4[20]; 
+  char string5[20]; 
+  char string6[20]; 
+  char string7[20]; 
+  char string8[20]; 
 
   int result; // result of the concatenation
   
-  sprintf(s1, "%d", a); 
-  sprintf(s2, "%d", b);
-  sprintf(s3, "%d", c); 
-  sprintf(s4, "%d", d); 
-  sprintf(s5, "%d", e); 
-  sprintf(s6, "%d", f); 
-  sprintf(s7, "%d", g); 
-  sprintf(s8, "%d", h); 
+  sprintf(string1, "%d", a); 
+  sprintf(string2, "%d", b);
+  sprintf(string3, "%d", c); 
+  sprintf(string4, "%d", d); 
+  sprintf(string5, "%d", e); 
+  sprintf(string6, "%d", f); 
+  sprintf(string7, "%d", g); 
+  sprintf(string8, "%d", h); 
   
-  strcat(s1, s2);
-  strcat(s1, s3); 
-  strcat(s1, s4); 
-  strcat(s1, s5);  
-  strcat(s1, s6); 
-  strcat(s1, s7); 
-  strcat(s1, s8); 
+  strcat(string1, string2);
+  strcat(string1, string3); 
+  strcat(string1, string4); 
+  strcat(string1, string5);  
+  strcat(string1, string6); 
+  strcat(string1, string7); 
+  strcat(string1, string8); 
   
-  result = atoi(s1);
+  result = atoi(string1);
   
   return result; 
 } 
@@ -282,8 +353,7 @@ HBTNode *top(STACK *stack){
   return current; // returns the previous top node
 }
 
-
-static int isLeafNode(HBTNode * node){
+int isLeafNode(HBTNode * node){
   // determines if node is leaf node or not
   if(node -> left == NULL && node -> right == NULL){
     return 1;

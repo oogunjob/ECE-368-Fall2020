@@ -32,12 +32,13 @@ HBTNode * createNode(int data);
 int concatenate(int a, int b, int c, int d, int e, int f, int g, int h);
 int convert2decimal(int num);
 int * decodeInput(FILE * file, long topoSize);
+int isLeafNode(HBTNode * node);
 
 void loadTree(FILE * file, HBTFile * HBT, long topoSize);
 void push(STACK *stack, HBTNode *node);
 void printTree(FILE * file, HBTNode* node);
 void deleteTree(HBTNode *node);
-void openFiles(char * file1, char * file2, char * file3, char * file4, char * file5);
+void printEncoded(FILE * file, char * filename, HBTFile * HBT);
 
 #endif
 
