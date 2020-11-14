@@ -22,7 +22,6 @@ typedef struct _STACK {
   struct _HBTNode *top;
 } STACK;
 
-
 HBTFile * openFile(char * filename);
 
 HBTNode *top(STACK *stack);
@@ -36,9 +35,11 @@ int isLeafNode(HBTNode * node);
 
 void loadTree(FILE * file, HBTFile * HBT, long topoSize);
 void push(STACK *stack, HBTNode *node);
-void printTree(FILE * file, HBTNode* node);
 void deleteTree(HBTNode *node);
+
+void printTree(FILE * file, HBTNode* node);
 void printEncoded(FILE * file, char * filename, HBTFile * HBT);
+void printCount(FILE * input, char * filename);
 
 #endif
 

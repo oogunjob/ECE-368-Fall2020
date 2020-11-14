@@ -5,6 +5,10 @@
 #include <string.h>
 #include "huffman.h"
 
+
+
+
+// going to need to come back and fix this for binary1
 void printEncoded(FILE * file, char * filename, HBTFile * HBT){
   long numberEncoded;
   uint8_t temporary;
@@ -20,8 +24,6 @@ void printEncoded(FILE * file, char * filename, HBTFile * HBT){
 
   size = numberEncoded * 8; // computes the size of the encodedArray
   fseek(file, HBT -> topoSize + 24, SEEK_SET); // sets file to begin at topology order
-  
-  fprintf(stdout, "The size is: %d\n", size);
 
   int * encodedArray = malloc(sizeof(*encodedArray) * size);
 
@@ -41,8 +43,8 @@ void printEncoded(FILE * file, char * filename, HBTFile * HBT){
   
   fclose(file); // closes the input file
 
-  count = 0;
-  lcv = 0;
+  count = 0; // resets count to 0
+  lcv = 0; // loop control variable
   
   file = fopen(filename, "w"); // opens argv[3] to be written to
   HBTNode * head = HBT -> tree;
@@ -64,21 +66,14 @@ void printEncoded(FILE * file, char * filename, HBTFile * HBT){
        }
     }
 
-    if(current -> data > 0){
+    if(current -> data != -1){
       fprintf(file, "%c", current -> data);
       current = head;
       count++;
     }
   }
 
-
-
-
-
-
-
-
-
+  fclose(file);
   free(encodedArray);
 
   return;
@@ -91,12 +86,6 @@ HBTFile * openFile(char * filename){
   fread(&(head -> encodedSize), sizeof(long), 1, file); // loads encoded bytes size
   fread(&(head -> topoSize), sizeof(long), 1, file); // loads topology bytes size 
   fread(&(head -> unencodedSize), sizeof(long), 1, file); // loads unencoded bytes size
-
-  /*
-  fprintf(stdout, "Encoded Size: %ld\n", head -> encodedSize);
-  fprintf(stdout, "Topology Size: %ld\n", head -> topoSize);
-  fprintf(stdout, "Unencoded Size: %ld\n", head -> unencodedSize);
-  */
 
   loadTree(file, head, head -> topoSize);
 
@@ -212,6 +201,7 @@ HBTNode * buildTree(int * array, int size){
 
       // if the node is not a leaf node, add it to the stack
       if(data == 0){
+        Stack -> top -> left -> data = -1; // sets the value of the node to NULL // COME BACK TO THIS
         push(Stack, Stack -> top -> left); // pushes the node to the stack
       }
       // if the node is a leaf node, assign next data point
@@ -225,6 +215,7 @@ HBTNode * buildTree(int * array, int size){
 
       // if the node is not a leaf node, add it to the stack
       if(data == 0){
+        Stack -> top -> right -> data = -1; // sets the value of the node to NULL // COME BACK TO THIS
         current = Stack -> top -> right;
         deletedNode = top(Stack);
         deletedNode -> data += 0; // adds nothing to deleted node data to remove gcc warning   
@@ -362,9 +353,8 @@ int isLeafNode(HBTNode * node){
 }
 
 void printTree(FILE * file, HBTNode* node) { 
-  if(node == NULL){ 
+  if(node == NULL)
     return;
-  }
    
   // if the node is a leaf node, print a 1 prior to its data
   if(isLeafNode(node)){
@@ -380,6 +370,29 @@ void printTree(FILE * file, HBTNode* node) {
 
   // traverses the right side of the tree
   printTree(file, node -> right); 
+}
+
+void printCount(FILE * input, char * filename){
+  FILE * output = fopen(filename, "w"); // opens the output file
+  
+  long ASCII[256] = {0}; // count of every ASCII used 
+
+  int c; // character read in the fie
+
+  // loops through the file to see how many times each character in ASCII table is used
+  while((c = fgetc(input))) {
+    // break if end of file
+    if(c == EOF) 
+      break;
+
+    // adds one to the count of that particular character
+    ASCII[c] += 1;
+  }
+
+  fwrite(ASCII, sizeof(ASCII), 1, output); // write the contents of the array to the output file
+  fclose(output); // closes output file
+
+  return;
 }
 
 void deleteTree(HBTNode *node){

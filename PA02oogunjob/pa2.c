@@ -10,6 +10,7 @@ int main(int argc, char ** argv){
   }
   
   // argv[0] = executable file
+ 
   // argv[1] = encoded input file
   
   // argv[2] = output file for the tree
@@ -18,6 +19,7 @@ int main(int argc, char ** argv){
   // argv[5] = output file for huffman tree
   // argv[6] = output file for decoded file
 
+  // opens input file and stores in HBT file
   HBTFile * HBT = openFile(argv[1]); // loads the information stored in input file into HBT file
   
   // creates output for argv[2]
@@ -30,8 +32,10 @@ int main(int argc, char ** argv){
   printEncoded(file, argv[3], HBT); 
   
   // creates output for argv[4]
-
-
+  file = fopen(argv[3], "r");
+  printCount(file, argv[4]);
+  fclose(file); // closes the input file
+  
   // creates output for argv[5]
 
   
