@@ -5,80 +5,6 @@
 #include <string.h>
 #include "huffman.h"
 
-
-
-
-// going to need to come back and fix this for binary1
-void printEncoded(FILE * file, char * filename, HBTFile * HBT){
-  long numberEncoded;
-  uint8_t temporary;
-  uint8_t byte;
-  
-  int count = 0;
-  int countByte = 0;
-  
-  int lcv; // loop control variable
-  int size; // size of the encodedArray
-
-  numberEncoded = HBT -> encodedSize - HBT -> topoSize - 24;
-
-  size = numberEncoded * 8; // computes the size of the encodedArray
-  fseek(file, HBT -> topoSize + 24, SEEK_SET); // sets file to begin at topology order
-
-  int * encodedArray = malloc(sizeof(*encodedArray) * size);
-
-  // used to update the resultant character that will be used to store in encoded array 
-  while(count != numberEncoded){
-    fread(&byte, 1, 1, file);
-
-    for(lcv = 7; lcv >= 0; lcv--){
-      temporary = byte << lcv;
-      temporary = temporary >> 7;
-      
-      encodedArray[countByte] = (int) temporary;
-      countByte += 1;
-    }
-    count += 1;
-  }
-  
-  fclose(file); // closes the input file
-
-  count = 0; // resets count to 0
-  lcv = 0; // loop control variable
-  
-  file = fopen(filename, "w"); // opens argv[3] to be written to
-  HBTNode * head = HBT -> tree;
-  HBTNode * current = head;
-
-  while(count != HBT -> unencodedSize){
-    countByte = encodedArray[lcv++]; // sets the count byte to the top number in the encoded array
-    
-    if(countByte == 0){
-      current = current -> left; // if the count byte is 0, traverse to the left of the tree
-      if(current == NULL){
-         break;
-       }
-    }
-    else{
-      current = current -> right; // if the count byte is 1, traverse to the left of the tree
-       if(current == NULL){
-         break;
-       }
-    }
-
-    if(current -> data != -1){
-      fprintf(file, "%c", current -> data);
-      current = head;
-      count++;
-    }
-  }
-
-  fclose(file);
-  free(encodedArray);
-
-  return;
-}
-
 HBTFile * openFile(char * filename){
   FILE * file = fopen(filename, "rb"); // opens the input file
   HBTFile * head = malloc(sizeof(*head)); // allocates space for HBT file that will hold information
@@ -255,7 +181,6 @@ int * decodeInput(FILE * file, long topoSize){
       countByte++; // increments count of bytes
     }
   }
-
   return bitArray;
 }
 
@@ -372,12 +297,82 @@ void printTree(FILE * file, HBTNode* node) {
   printTree(file, node -> right); 
 }
 
+void printEncoded(FILE * file, char * filename, HBTFile * HBT){
+  long numberEncoded;
+  uint8_t temporary;
+  uint8_t byte;
+  
+  int count = 0;
+  int countByte = 0;
+  
+  int lcv; // loop control variable
+  int size; // size of the encodedArray
+
+  numberEncoded = HBT -> encodedSize - HBT -> topoSize - 24;
+
+  size = numberEncoded * 8; // computes the size of the encodedArray
+  fseek(file, HBT -> topoSize + 24, SEEK_SET); // sets file to begin at topology order
+
+  int * encodedArray = malloc(sizeof(*encodedArray) * size);
+
+  // used to update the resultant character that will be used to store in encoded array 
+  while(count != numberEncoded){
+    fread(&byte, 1, 1, file);
+
+    for(lcv = 7; lcv >= 0; lcv--){
+      temporary = byte << lcv;
+      temporary = temporary >> 7;
+      
+      encodedArray[countByte] = (int) temporary;
+      countByte += 1;
+    }
+    count += 1;
+  }
+  
+  fclose(file); // closes the input file
+
+  count = 0; // resets count to 0
+  lcv = 0; // loop control variable
+  
+  file = fopen(filename, "w"); // opens argv[3] to be written to
+  HBTNode * head = HBT -> tree;
+  HBTNode * current = head;
+
+  while(count != HBT -> unencodedSize){
+    countByte = encodedArray[lcv++]; // sets the count byte to the top number in the encoded array
+    
+    if(countByte == 0){
+      current = current -> left; // if the count byte is 0, traverse to the left of the tree
+      if(current == NULL){
+         break;
+       }
+    }
+    else{
+      current = current -> right; // if the count byte is 1, traverse to the left of the tree
+       if(current == NULL){
+         break;
+       }
+    }
+
+    if(current -> data != -1){
+      fprintf(file, "%c", current -> data);
+      current = head;
+      count++;
+    }
+  }
+
+  fclose(file); // closes the output file
+  free(encodedArray); // frees allocated space for encoded array
+
+  return;
+}
+
 void printCount(FILE * input, char * filename){
-  FILE * output = fopen(filename, "w"); // opens the output file
+  FILE * output = fopen(filename, "wb"); // opens the output file
   
   long ASCII[256] = {0}; // count of every ASCII used 
 
-  int c; // character read in the fie
+  long c; // character read in the fie
 
   // loops through the file to see how many times each character in ASCII table is used
   while((c = fgetc(input))) {

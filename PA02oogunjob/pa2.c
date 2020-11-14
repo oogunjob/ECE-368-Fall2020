@@ -32,7 +32,7 @@ int main(int argc, char ** argv){
   printEncoded(file, argv[3], HBT); 
   
   // creates output for argv[4]
-  file = fopen(argv[3], "r");
+  file = fopen(argv[3], "rb");
   printCount(file, argv[4]);
   fclose(file); // closes the input file
   
