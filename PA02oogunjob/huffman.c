@@ -172,7 +172,7 @@ int * decodeInput(FILE * file, long topoSize){
   int * bitArray = malloc(sizeof(*bitArray) * (topoSize * 8)); // array that will hold the bits read from file
 
   for(count = 0; count < topoSize; count++){
-    fread(&byte, 1, 1, file); 
+    fread(&byte, 1, 1, file); // reads each byte from the file
     for(lcv = 7; lcv >= 0; lcv--){
       temporary = byte << lcv;
       temporary = temporary >> 7;
@@ -201,6 +201,7 @@ int convert2decimal(int num) {
   return decimal;
 }
 
+// come back to this function to adjust similiarity
 int concatenate(int a, int b, int c, int d, int e, int f, int g, int h){ 
   // will need to come back and update this function
   char string1[20]; 
@@ -367,27 +368,28 @@ void printEncoded(FILE * file, char * filename, HBTFile * HBT){
   return;
 }
 
-void printCount(FILE * input, char * filename){
+long * printCount(FILE * input, char * filename){
   FILE * output = fopen(filename, "wb"); // opens the output file
   
-  long ASCII[256] = {0}; // count of every ASCII used 
+  long * ASCII = calloc(256, sizeof(*ASCII)); // frequency count of every character in ASCII table
 
-  long c; // character read in the fie
-
-  // loops through the file to see how many times each character in ASCII table is used
-  while((c = fgetc(input))) {
-    // break if end of file
-    if(c == EOF) 
-      break;
-
-    // adds one to the count of that particular character
-    ASCII[c] += 1;
+  unsigned char character = fgetc(input); // character read from the decoded file
+  
+  // loops through decoded file and increments the frequenecy of each character
+  while(!feof(input)){
+    ASCII[(int) character]++; // increments frequency of character by 1
+    character = fgetc(input); // moves to next character
   }
 
-  fwrite(ASCII, sizeof(ASCII), 1, output); // write the contents of the array to the output file
+  // prints each count to file
+  int count; // loop control variable
+  for(count = 0; count < 256; count++){
+    fwrite(&(ASCII[count]), sizeof(long), 1, output);
+  }
+
   fclose(output); // closes output file
 
-  return;
+  return ASCII; // returns frequency array
 }
 
 void deleteTree(HBTNode *node){

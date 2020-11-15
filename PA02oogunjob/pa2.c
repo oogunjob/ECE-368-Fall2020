@@ -11,13 +11,13 @@ int main(int argc, char ** argv){
   
   // argv[0] = executable file
  
-  // argv[1] = encoded input file
+  // argv[1] = encoded file
   
-  // argv[2] = output file for the tree
-  // argv[3] = output file for original 
+  // argv[2] = output file for tree
+  // argv[3] = output file for decoded 
   // argv[4] = output file for count
   // argv[5] = output file for huffman tree
-  // argv[6] = output file for decoded file
+  // argv[6] = output file for evaluation
 
   // opens input file and stores in HBT file
   HBTFile * HBT = openFile(argv[1]); // loads the information stored in input file into HBT file
@@ -33,16 +33,17 @@ int main(int argc, char ** argv){
   
   // creates output for argv[4]
   file = fopen(argv[3], "rb");
-  printCount(file, argv[4]);
+  long * frequencies = printCount(file, argv[4]); 
   fclose(file); // closes the input file
   
   // creates output for argv[5]
-
+  
+  free(frequencies); // frees count of frequencies in ASCII table
   
   // creates output for argv[6]
 
 
-  deleteTree(HBT -> tree);
+  deleteTree(HBT -> tree); // deletes binary tree
   free(HBT); // frees the HBT File
 
   return EXIT_SUCCESS;

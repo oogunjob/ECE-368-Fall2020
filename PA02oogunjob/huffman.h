@@ -6,13 +6,10 @@ typedef struct _HBTFile {
    long topoSize;
    long unencodedSize;
    struct _HBTNode *tree;
-   char * encodedText;
 } HBTFile;
 
 typedef struct _HBTNode {
   int data;
-  int frequency;
-  char * character;
   struct _HBTNode *left;
   struct _HBTNode *right;
   struct _HBTNode *next;
@@ -39,7 +36,7 @@ void deleteTree(HBTNode *node);
 
 void printTree(FILE * file, HBTNode* node);
 void printEncoded(FILE * file, char * filename, HBTFile * HBT);
-void printCount(FILE * input, char * filename);
+long * printCount(FILE * input, char * filename);
 
 #endif
 
