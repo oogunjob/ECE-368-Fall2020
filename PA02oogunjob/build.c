@@ -86,11 +86,12 @@ ListNode * constructHuffmanTree(long * frequencies, FILE * file){
     temp -> data = 0; // sets data as 0
     temp -> frequency = (node1 -> frequency) + (node2 -> frequency); // computes node frequency
     
+    // assigns the left and right nodes to temporary node
     temp -> left = node1; 
     temp -> right = node2;
     
-    ListNode * ln = makeListNode(temp);
-    head = insert(head, ln);
+    ListNode * list = makeListNode(temp);  // makes list with temp node
+    head = insert(head, list); // inserts to list
   }
     
   // prints the binary huffman tree to file

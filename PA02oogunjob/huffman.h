@@ -36,7 +36,7 @@ ListNode * constructHuffmanTree(long * frequencies, FILE * file);
 ListNode * makeListNode(HBTNode * temp);
 ListNode * insert(ListNode * head, ListNode * list);
 
-int concatenate(int a, int b, int c, int d, int e, int f, int g, int h);
+int concatenate(int A1, int B1, int C1, int D1, int E1, int F1, int G1, int H1);
 int convert2decimal(int num);
 int * decodeInput(FILE * file, long topoSize);
 int isLeafNode(HBTNode * node);
@@ -50,4 +50,3 @@ void printEncoded(FILE * file, char * filename, HBTFile * HBT);
 long * printCount(FILE * input, char * filename);
 
 #endif
-

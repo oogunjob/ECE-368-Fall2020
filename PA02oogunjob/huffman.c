@@ -7,13 +7,30 @@
 
 HBTFile * openFile(char * filename){
   FILE * file = fopen(filename, "rb"); // opens the input file
+  
+  // if file is NULL, return NULL pointer
+  if(file == NULL){
+    return NULL;
+  }
+
+  // checks if the file is empty or not
+  fseek(file, 0, SEEK_END);
+  int size = ftell(file);
+
+  // if the file is empty, return NULL pointer
+  if(size == 0){
+    return NULL;
+  }
+
+  fseek(file, 0, SEEK_SET); // returns to the start of the file
+  
   HBTFile * head = malloc(sizeof(*head)); // allocates space for HBT file that will hold information
 
   fread(&(head -> encodedSize), sizeof(long), 1, file); // loads encoded bytes size
   fread(&(head -> topoSize), sizeof(long), 1, file); // loads topology bytes size 
   fread(&(head -> unencodedSize), sizeof(long), 1, file); // loads unencoded bytes size
 
-  loadTree(file, head, head -> topoSize);
+  loadTree(file, head, head -> topoSize); // loads tree from the rest of the file
 
   fclose(file); // closes file
   return head;  
@@ -201,9 +218,8 @@ int convert2decimal(int num) {
   return decimal;
 }
 
-// come back to this function to adjust similiarity
-int concatenate(int a, int b, int c, int d, int e, int f, int g, int h){ 
-  // will need to come back and update this function
+int concatenate(int A1, int B1, int C1, int D1, int E1, int F1, int G1, int H1){ 
+  // character strings that will hold concatenations
   char string1[20]; 
   char string2[20]; 
   char string3[20]; 
@@ -211,19 +227,19 @@ int concatenate(int a, int b, int c, int d, int e, int f, int g, int h){
   char string5[20]; 
   char string6[20]; 
   char string7[20]; 
-  char string8[20]; 
-
-  int result; // result of the concatenation
+  char string8[20];
   
-  sprintf(string1, "%d", a); 
-  sprintf(string2, "%d", b);
-  sprintf(string3, "%d", c); 
-  sprintf(string4, "%d", d); 
-  sprintf(string5, "%d", e); 
-  sprintf(string6, "%d", f); 
-  sprintf(string7, "%d", g); 
-  sprintf(string8, "%d", h); 
+  // reads in each string into specified character array
+  sprintf(string1, "%d", A1); 
+  sprintf(string2, "%d", B1);
+  sprintf(string3, "%d", C1); 
+  sprintf(string4, "%d", D1); 
+  sprintf(string5, "%d", E1); 
+  sprintf(string6, "%d", F1); 
+  sprintf(string7, "%d", G1); 
+  sprintf(string8, "%d", H1); 
   
+  // concatenates the final resultant string
   strcat(string1, string2);
   strcat(string1, string3); 
   strcat(string1, string4); 
@@ -232,9 +248,7 @@ int concatenate(int a, int b, int c, int d, int e, int f, int g, int h){
   strcat(string1, string7); 
   strcat(string1, string8); 
   
-  result = atoi(string1);
-  
-  return result; 
+  return atoi(string1); 
 } 
 
 HBTNode * createNode(int data){

@@ -16,7 +16,7 @@ pa2: $(OBJS)
 testmemory: pa2
 	$(VAL) ./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
 
-testall: gophers lorum stone woods binary1
+testall: gophers lorum stone woods binary1 empty
 
 gophers: pa2
 	./pa2 encoded/gophers_nonhuff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
@@ -52,6 +52,13 @@ binary1: pa2
 	diff -w binary1.ori decoded/binary1
 	diff -w binary1.count count/binary1.count
 	diff -w binary1.htree tree/binary1_huff.tree
+
+empty: pa2
+	./pa2 encoded/empty_nonhuff.hbt empty.tree empty.ori empty.count empty.htree empty.eval
+	diff -w empty.tree tree/empty_nonhuff.tree
+	diff -w empty.ori decoded/empty
+	diff -w empty.count count/empty.count
+	diff -w empty.htree tree/empty_huff.tree
 
 clean: # remove all machine generated files
 	rm -f pa2 *.o output?
