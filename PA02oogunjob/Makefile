@@ -4,7 +4,7 @@ GCC = gcc -std=c99 -g -O3 $(WARNING) $(ERROR) $(LIBS)
 LIBS = -lm
 VAL = valgrind --tool=memcheck --log-file=memcheck.txt --leak-check=full --verbose
 
-SRCS = pa2.c huffman.c
+SRCS = pa2.c huffman.c build.c
 OBJS = $(SRCS:%.c=%.o)
 
 pa2: $(OBJS)
@@ -19,14 +19,14 @@ testmemory: pa2
 testall: gophers lorum stone woods binary1
 
 gophers: pa2
-	./pa2 encoded/gophers_huff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
-	diff -w gophers.tree tree/gophers_huff.tree
+	./pa2 encoded/gophers_nonhuff.hbt gophers.tree gophers.ori gophers.count gophers.htree gophers.eval
+	diff -w gophers.tree tree/gophers_nonhuff.tree
 	diff -w gophers.ori decoded/gophers
 	diff -w gophers.count count/gophers.count
 
 lorum: pa2
-	./pa2 encoded/lorum_huff.hbt lorum.tree lorum.ori lorum.count lorum.htree lorum.eval
-	diff -w lorum.tree tree/lorum_huff.tree
+	./pa2 encoded/lorum_nonhuff.hbt lorum.tree lorum.ori lorum.count lorum.htree lorum.eval
+	diff -w lorum.tree tree/lorum_nonhuff.tree
 	diff -w lorum.ori decoded/lorum
 	diff -w lorum.count count/lorum.count
 

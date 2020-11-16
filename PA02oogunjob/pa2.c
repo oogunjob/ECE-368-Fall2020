@@ -37,12 +37,21 @@ int main(int argc, char ** argv){
   fclose(file); // closes the input file
   
   // creates output for argv[5]
+  file = fopen(argv[5], "w"); // opens output file to be written to
+   
+  ListNode * root = NULL;
+  root = constructHuffmanTree(frequencies, file); // creates the huffman coding tree given the frequencies in argv[3]
   
+  
+
+
+
   free(frequencies); // frees count of frequencies in ASCII table
-  
+  fclose(file);
+
   // creates output for argv[6]
-
-
+  
+  
   deleteTree(HBT -> tree); // deletes binary tree
   free(HBT); // frees the HBT File
 
