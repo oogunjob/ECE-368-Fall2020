@@ -27,64 +27,74 @@ ListNode * makeListNode(HBTNode * temp){
 }
 
 ListNode * insert(ListNode * head, ListNode * list){
+  // if the head of the list is empty, return the head
   if(head == NULL){
     return list;
   }
     
+  // if the head root's frequency is less than or equal to the frequency of the list's root
+  // assign the next list to head as the list passed into function
   if((head -> root) -> frequency <= (list -> root) -> frequency){
     head -> next = insert(head -> next, list);
     return head;
   }
     
-  list -> next = head;
+  list -> next = head; // makes the next list the head
+  
   return list;
 }
 
-
-
-
-
-
 ListNode * constructHuffmanTree(long * frequencies, FILE * file){
-  int ind = 0;
-  while (frequencies[ind] == 0){
-    ind++;
+  int count = 0; // loop control variable
+  
+  // checks every node in the frequency array for ASCII characters with no occurences
+  while(frequencies[count] == 0){
+    count++; // increments count by 1
   }
     
-  if (ind == 256){ //no frequency
+  // if there were no count of ASCII chracters in the frequency array
+  // return NULL to head list
+  if(count == 256){
     return NULL;
   }
-    
-  ListNode * head = NULL;
-  while (ind < 256){
-    if (frequencies[ind]){
-      HBTNode * tree = makeHBTNode(ind, frequencies[ind]);
+
+  ListNode * head = NULL; // creates the head of a list node
+
+  for(count = count; count < 256; count++){
+    // if the frequency of an ASCII character is greater than one, creates a node for it
+    if(frequencies[count]){
+      HBTNode * tree = makeHBTNode(count, frequencies[count]);
       ListNode * node = makeListNode(tree);
       head = insert(head, node);
     }
-        
-    ind ++;
   }
 
-  while ((head -> next) != NULL){ //merge linked list to a tree
-    ListNode * num2 = head->next;
-    ListNode * num3 = num2->next;
-    HBTNode * tn1 = head->root;
-    HBTNode * tn2 = num2->root;
-    free(head);
-    free(num2);
-    head = num3;
-    HBTNode * merg = malloc(sizeof(HBTNode));
-    merg->left = tn1;
-    merg->right = tn2;
-    merg->data = 0;
-    merg->frequency = tn1->frequency+tn2->frequency;
-    ListNode * ln = makeListNode(merg);
+  // constructs binary huffman tree
+  while ((head -> next) != NULL){ 
+    ListNode * list2 = head -> next; // second list node 
+    ListNode * list3 = list2 -> next; // third list node
+    
+    HBTNode * node1 = head -> root; // first HBT node
+    HBTNode * node2 = list2 -> root; // second HBT node
+    
+    free(head); // fress the head of the list
+    free(list2); // frees the second list
+    head = list3; // head becomes the third list
+    
+    HBTNode * temp = malloc(sizeof(*temp)); // creates temporary node
+    
+    temp -> data = 0; // sets data as 0
+    temp -> frequency = (node1 -> frequency) + (node2 -> frequency); // computes node frequency
+    
+    temp -> left = node1; 
+    temp -> right = node2;
+    
+    ListNode * ln = makeListNode(temp);
     head = insert(head, ln);
   }
     
+  // prints the binary huffman tree to file
   printTree(file, head -> root);
 
-  // printTree(head->root, output);
   return head;
 }
