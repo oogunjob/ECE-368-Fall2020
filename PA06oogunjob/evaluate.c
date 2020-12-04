@@ -69,6 +69,8 @@ int Evaluate(char * tablefile, char * sequencefile){
       fread(&(table[i][j]), sizeof(short), 1, binaryTable);
     }
   }
+  
+  // previous version without dynamically allocated array remove this later
 
   // creates the sequence using the creating table
   short sequence[length];
