@@ -1,0 +1,12 @@
+static boolean checkStrictlyIncreasing(int[] array){
+        boolean result=true;
+        int i;
+        for(i=0;i<array.length-1;i++){
+            if(array[i]>=array[i+1])
+            {
+                result=false;
+                break;
+            }
+        }
+        return result;
+    }
