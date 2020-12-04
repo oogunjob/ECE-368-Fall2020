@@ -53,6 +53,7 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
     }
     fprintf(textTable, "\n");
   }
+  fclose(textTable); // closes the file
 
 
   // creates the solution table 
@@ -76,8 +77,7 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
   // finds the length of the longest path in the matrix
   int length = longestIncreasingPath(table, solutionTable, rows, columns);
-   
-  fprintf(stdout, "The length of the longest path: %d\n", length);
+  fwrite(&(length), sizeof(int), 1, sequenceFile); // writes the length of the path to the file
 
 
   // frees all space allocated for each column for all rows in the table
@@ -94,7 +94,6 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
   // closes necessary files
   fclose(binaryTable);
-  fclose(textTable);
   fclose(sequenceFile);
 
   return 1;
@@ -142,4 +141,3 @@ int max(int x, int y){
   // returns the max number between the two passed integers
   return (x > y ) ? x : y;
 }
-
