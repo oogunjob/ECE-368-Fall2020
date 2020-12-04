@@ -55,18 +55,42 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
   }
 
 
+  // creates the solution table 
+  short ** solutionTable;
+  solutionTable = malloc(sizeof(*solutionTable) * rows);
+  int solutionLCV; 
+
+  // allocated space for each column for all rows in the table
+  for(solutionLCV = 0; solutionLCV < rows; solutionLCV++){ 
+    solutionTable[solutionLCV] = malloc(sizeof(*solutionTable[solutionLCV]) * columns);
+  }  
+
+  for(int x = 0; x < rows; x++){
+    for(int y = 0; y < columns; y++){
+      // fills solution table with zeros
+      solutionTable[x][y] = 0;
+    }
+  }
+  // end of creation of solution table
 
 
-
+  // finds the length of the longest path in the matrix
+  int length = longestIncreasingPath(table, solutionTable, rows, columns);
+   
+  fprintf(stdout, "The length of the longest path: %d\n", length);
 
 
   // frees all space allocated for each column for all rows in the table
   for(lcv = 0; lcv < rows; lcv++){ 
     free(table[lcv]);
   }  
-
   free(table); // frees allocated memory from table
 
+  // frees all space allocated for each column for all rows in the solution table
+  for(solutionLCV = 0; solutionLCV < rows; solutionLCV++){ 
+    free(solutionTable[solutionLCV]);
+  }  
+  free(solutionTable); // frees allocated memory from solution table
 
   // closes necessary files
   fclose(binaryTable);
@@ -75,3 +99,47 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
   return 1;
 }
+
+int longestIncreasingPath(short ** table, short ** solutionTable, short rows, short columns){
+  if (table == NULL) 
+    return 0;
+        
+  int result = 0;
+  
+  for(int row = 0; row < rows; row++) {
+    for(int column = 0; column < columns; column++) {
+      result = max(result, DFS(table, solutionTable, row, column, rows, columns));
+    }
+  }  
+  return result;
+}
+
+int DFS(short ** table, short ** solutionTable, int row, int column, int ROWS, int COLUMNS){
+  if(solutionTable[row][column] > 0){ 
+    return solutionTable[row][column];
+  }
+        
+  int result = 1;
+
+  if(row + 1 < ROWS && table[row + 1][column] > table[row][column]) 
+    result = max(result, 1 + DFS(table, solutionTable, row + 1, column, ROWS, COLUMNS));
+
+  if(row - 1 >= 0 && table[row - 1][column] > table[row][column]) 
+    result = max(result, 1 + DFS(table, solutionTable, row - 1, column, ROWS, COLUMNS));
+
+  if(column + 1 < COLUMNS && table[row][column + 1] > table[row][column]) 
+    result = max(result, 1 + DFS(table, solutionTable, row, column + 1, ROWS, COLUMNS));
+
+  if(column - 1 >= 0 && table[row][column - 1] > table[row][column]) 
+    result = max(result, 1 + DFS(table, solutionTable, row, column - 1, ROWS, COLUMNS));
+        
+  solutionTable[row][column] = result;
+  
+  return solutionTable[row][column];
+}
+
+int max(int x, int y){
+  // returns the max number between the two passed integers
+  return (x > y ) ? x : y;
+}
+

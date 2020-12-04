@@ -13,7 +13,7 @@ pa6: $(OBJS)
 	$(GCC) $(TESTFLAGS) -c $*.c
 
 testmemory: pa6
-	$(VAL) ./pa6 -e examples/4_4.b examples/4_4.s
+	$(VAL) ./pa6 -s examples/4_4.b 4_4.t 4_4.s
 
 
 testall: 4x4 4x5 5x5 10x10
