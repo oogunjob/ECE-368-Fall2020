@@ -61,7 +61,14 @@ int Evaluate(char * tablefile, char * sequencefile){
   } 
 
   // creates the table from the binary table
-  short table[rows][columns];
+  short ** table;
+  table = malloc(sizeof(*table) * rows);
+  int lcv; 
+
+  // allocated space for each column for all rows in the table
+  for(lcv = 0; lcv < rows; lcv++){ 
+    table[lcv] = malloc(sizeof(*table[lcv]) * columns);
+  }  
 
   for(int i = 0; i < rows; i++){
     for(int j = 0; j < columns; j++){
@@ -69,11 +76,10 @@ int Evaluate(char * tablefile, char * sequencefile){
       fread(&(table[i][j]), sizeof(short), 1, binaryTable);
     }
   }
-  
-  // previous version without dynamically allocated array remove this later
 
   // creates the sequence using the creating table
-  short sequence[length];
+  short * sequence;
+  sequence = malloc(sizeof(*sequence) * length);
   
   short row; // row index
   short column; // column index
@@ -100,6 +106,13 @@ int Evaluate(char * tablefile, char * sequencefile){
 
 
 
+  // frees all space allocated for each column for all rows in the table
+  for(lcv = 0; lcv < rows; lcv++){ 
+    free(table[lcv]);
+  }  
+
+  free(table); // frees allocated memory from table
+  free(sequence); // frees allocated memory from sequence
 
   fclose(binaryTable); // closes the binary table file
   fclose(binarySequence); // closes the binary sequence file

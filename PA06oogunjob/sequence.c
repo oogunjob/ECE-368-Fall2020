@@ -23,8 +23,15 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
   fread(&columns, sizeof(short), 1, binaryTable); // reads the number of columns from file
 
   // creates the table from the binary table
-  short table[rows][columns];
-  
+  short ** table;
+  table = malloc(sizeof(*table) * rows);
+  int lcv; 
+
+  // allocated space for each column for all rows in the table
+  for(lcv = 0; lcv < rows; lcv++){ 
+    table[lcv] = malloc(sizeof(*table[lcv]) * columns);
+  }  
+
   for(int i = 0; i < rows; i++){
     for(int j = 0; j < columns; j++){
       // reads each number from binary table into the 2D array
@@ -53,10 +60,12 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
 
 
+  // frees all space allocated for each column for all rows in the table
+  for(lcv = 0; lcv < rows; lcv++){ 
+    free(table[lcv]);
+  }  
 
-
-
-
+  free(table); // frees allocated memory from table
 
 
   // closes necessary files
