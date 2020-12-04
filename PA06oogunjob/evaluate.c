@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "pa6.h"
 
 int Evaluate(char * tablefile, char * sequencefile){
@@ -47,7 +46,7 @@ int Evaluate(char * tablefile, char * sequencefile){
 
   fread(&length, sizeof(int), 1, binarySequence); // reads in the length of the sequence from the file
   
-  // computes the size of the binary table file
+  // computes the size of the binary sequence file
   fseek(binarySequence, 0, SEEK_END); // moves to the end of the file
   if(ftell(binarySequence) != (sizeof(int) + 2 * length * sizeof(short))){
     fprintf(stdout, "0"); // COME BACK TO THIS
@@ -98,6 +97,8 @@ int Evaluate(char * tablefile, char * sequencefile){
 
 
 
+
+
   fclose(binaryTable); // closes the binary table file
   fclose(binarySequence); // closes the binary sequence file
 
@@ -108,12 +109,13 @@ int strictlyIncreasing(short sequence[], int length){
   int i;
   int result = 1;
 
+  // loops through array to ensure that it is strictly increasing 
   for(i = 0; i < length - 1; i++){
     if(sequence[i] >= sequence[i + 1]){
       result = 0;
       break;
     }
-  }
-        
-  return result;
+  }   
+ 
+  return result; // returns result of where it is strictly increasing or not
 }

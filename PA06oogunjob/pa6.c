@@ -8,7 +8,12 @@ int main(int argc, char * * argv){
   // finding stricly longest sequence mode
   if((strcmp("-s", argv[1])) == 0){
   
-    fprintf(stdout, "Longest Sequence Mode\n");
+    int sequence = findSequence(argv[2], argv[3], argv[4]);
+    
+    if(sequence < 1){
+      fprintf(stderr, "ERROR: Failure occured during opening of files.\n");
+      return EXIT_FAILURE;
+    }
   }
     
 
@@ -47,6 +52,7 @@ int main(int argc, char * * argv){
 
     // if the evaluation isn't equal to 1, return EXIT_FAILURE
     if(evaluation < 1){
+      fprintf(stderr, "ERROR: Failure occured during opening of files.\n");
       return EXIT_FAILURE;
     }
 

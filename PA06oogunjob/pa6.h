@@ -3,5 +3,6 @@
 
 int Evaluate(char * tablefile, char * sequencefile);
 int strictlyIncreasing(short sequence[], int length);
+int findSequence(char * tablefile, char * tabletextfile, char * sequencefile);
 
 #endif
