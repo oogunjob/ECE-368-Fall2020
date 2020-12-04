@@ -14,14 +14,21 @@ pa6: $(OBJS)
 
 testmemory: pa6
 	$(VAL) ./pa6 -e examples/4_4.b examples/4_4.s
+	
 
-
-testall: 4x4
+testall: 4x4 4x5 5x5 10x10
 
 4x4: pa6
 	./pa6 -e examples/4_4.b examples/4_4.s
 
+4x5: pa6
+	./pa6 -e examples/4_5.b examples/4_5.s
 
+5x5: pa6
+	./pa6 -e examples/5_5.b examples/5_5.s
+
+10x10: pa6
+	./pa6 -e examples/10_10.b examples/10_10.s
 
 clean: # remove all machine generated files
 	rm -f pa6 *.o output?
