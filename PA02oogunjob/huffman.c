@@ -78,11 +78,13 @@ void loadTree(FILE * file, HBTFile * HBT, long topoSize){
         ASCIIHelper = tempASCII >> (7 - lcv);
         ASCIIHelper = ASCIIHelper << 7;
         ASCIIHelper = ASCIIHelper >> (7 - lcv);
-        result = result | ASCIIHelper;
+        
+        result = result | ASCIIHelper; // finds result
       }
 
-      ASCII = (int) result;
-      result = 0x0;
+      ASCII = (int) result + 0; // creates the ASCII resultant
+      
+      result = 0x0; // resets the result
 
       size += 1; // increments size
       
@@ -220,10 +222,14 @@ int convert2decimal(int num) {
 
 int concatenate(int A1, int B1, int C1, int D1, int E1, int F1, int G1, int H1){ 
   // character strings that will hold concatenations
+  
+  // set of the first 4 bits in the byte
   char string1[20]; 
   char string2[20]; 
   char string3[20]; 
   char string4[20]; 
+  
+  // set of the last 4 bits in the byte
   char string5[20]; 
   char string6[20]; 
   char string7[20]; 
@@ -234,6 +240,7 @@ int concatenate(int A1, int B1, int C1, int D1, int E1, int F1, int G1, int H1){
   sprintf(string2, "%d", B1);
   sprintf(string3, "%d", C1); 
   sprintf(string4, "%d", D1); 
+  
   sprintf(string5, "%d", E1); 
   sprintf(string6, "%d", F1); 
   sprintf(string7, "%d", G1); 
@@ -243,6 +250,7 @@ int concatenate(int A1, int B1, int C1, int D1, int E1, int F1, int G1, int H1){
   strcat(string1, string2);
   strcat(string1, string3); 
   strcat(string1, string4); 
+  
   strcat(string1, string5);  
   strcat(string1, string6); 
   strcat(string1, string7); 
