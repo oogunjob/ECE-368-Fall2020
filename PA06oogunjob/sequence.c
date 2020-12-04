@@ -76,7 +76,21 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
 
   // finds the length of the longest path in the matrix
-  int length = longestIncreasingPath(table, solutionTable, rows, columns);
+  short * Row_Column = malloc(sizeof(*Row_Column) * 2); // the position of the row and column with the longest path
+  int length = longestIncreasingPath(table, solutionTable, Row_Column, rows, columns); // length of the longest path
+  
+  short * sequenceRow = malloc(sizeof(*sequenceRow) * length); // row of each number in the sequence
+  short * sequenceColumn = malloc(sizeof(*sequenceColumn) * length); // row of each number in the sequence
+  
+  sequenceRow[0] = Row_Column[0]; // stores the first row of the longest path in the array
+  sequenceColumn[0] = Row_Column[1]; // stores the first column of the longest path in the array
+
+
+  // frees necessary storage
+  free(Row_Column); // frees the allocated memory
+  free(sequenceRow);
+  free(sequenceColumn);
+  
   fwrite(&(length), sizeof(int), 1, sequenceFile); // writes the length of the path to the file
 
 
@@ -99,18 +113,19 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
   return 1;
 }
 
-int longestIncreasingPath(short ** table, short ** solutionTable, short rows, short columns){
+int longestIncreasingPath(short ** table, short ** solutionTable, short * Row_Column, short rows, short columns){
   if (table == NULL) 
     return 0;
         
-  int result = 0;
+  int pathLength = 0;
   
   for(int row = 0; row < rows; row++) {
     for(int column = 0; column < columns; column++) {
-      result = max(result, DFS(table, solutionTable, row, column, rows, columns));
+      pathLength = max(pathLength, DFS(table, solutionTable, row, column, rows, columns));
     }
   }  
-  return result;
+  
+  return pathLength;
 }
 
 int DFS(short ** table, short ** solutionTable, int row, int column, int ROWS, int COLUMNS){
@@ -119,8 +134,13 @@ int DFS(short ** table, short ** solutionTable, int row, int column, int ROWS, i
   }
         
   int result = 1;
+  
+  // if(row == 0 && column == 4){
+  //   fprintf(stdout, "This is the index position that I want, the value at this position is %hd.\n", table[row][column]);
+  // }
 
-  if(row + 1 < ROWS && table[row + 1][column] > table[row][column]) 
+
+  if(row + 1 < ROWS && table[row + 1][column] > table[row][column])
     result = max(result, 1 + DFS(table, solutionTable, row + 1, column, ROWS, COLUMNS));
 
   if(row - 1 >= 0 && table[row - 1][column] > table[row][column]) 
@@ -129,8 +149,9 @@ int DFS(short ** table, short ** solutionTable, int row, int column, int ROWS, i
   if(column + 1 < COLUMNS && table[row][column + 1] > table[row][column]) 
     result = max(result, 1 + DFS(table, solutionTable, row, column + 1, ROWS, COLUMNS));
 
-  if(column - 1 >= 0 && table[row][column - 1] > table[row][column]) 
+  if(column - 1 >= 0 && table[row][column - 1] > table[row][column]){ 
     result = max(result, 1 + DFS(table, solutionTable, row, column - 1, ROWS, COLUMNS));
+  }
         
   solutionTable[row][column] = result;
   
