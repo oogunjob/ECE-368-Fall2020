@@ -16,7 +16,9 @@ testmemory: pa6
 	$(VAL) ./pa6 -e examples/4_4.b examples/4_4.s
 
 
-test1: pa6
+testall: 4x4
+
+4x4: pa6
 	./pa6 -e examples/4_4.b examples/4_4.s
 
 

@@ -54,7 +54,7 @@ int Evaluate(char * tablefile, char * sequencefile){
   }
   else{
     // file evaluation passes all test cases
-    fprintf(stdout, "1, \n");
+    fprintf(stdout, "1, ");
     fseek(binarySequence, 0, SEEK_SET);
 
     // re-reads the rows and columns of the binary file
@@ -76,23 +76,44 @@ int Evaluate(char * tablefile, char * sequencefile){
   
   short row; // row index
   short column; // column index
+  int index = 0;
 
-  for(int index = 0; index < length; index++){
-   
-   
-   sequence[index] = table[row][column];
+  while(index < length){
+    fread(&(row), sizeof(short), 1, binarySequence);
+    fread(&(column), sizeof(short), 1, binarySequence);
+    sequence[index++] = table[row][column];
   }
-  
+
+  // checks if the sequence is strictly increasing or not
+  int strictlyIncreasingValue = strictlyIncreasing(sequence, length); 
+
+  // if the sequence is strictly increasing, print 1
+  if(strictlyIncreasingValue){
+    fprintf(stdout, "1, ");
+  }
+  // if the sequence is not strictly increasing, print 0
+  else{
+    fprintf(stdout, "0, ");
+  }
 
 
-  // int strictlyIncreasingValue = strictlyIncreasing(binaryTable, binarySequence); // checks if the sequence is strictly increasing or not
 
   fclose(binaryTable); // closes the binary table file
   fclose(binarySequence); // closes the binary sequence file
 
-  return 0;
+  return 1;
 }
 
-void buildTable(FILE * binaryTable, short rows, short columns){
-  fprintf(stdout, "Hey Shoot!\n");
+int strictlyIncreasing(short sequence[], int length){
+  int i;
+  int result = 1;
+
+  for(i = 0; i < length - 1; i++){
+    if(sequence[i] >= sequence[i + 1]){
+      result = 0;
+      break;
+    }
+  }
+        
+  return result;
 }
