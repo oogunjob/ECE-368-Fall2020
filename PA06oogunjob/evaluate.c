@@ -27,7 +27,7 @@ int Evaluate(char * tablefile, char * sequencefile){
   }
   else{
     // file evaluation passes all test cases
-    fprintf(stdout, "1, ");
+    fprintf(stdout, "1,");
     fseek(binaryTable, 0, SEEK_SET);
 
     // re-reads the rows and columns of the binary file
@@ -53,7 +53,7 @@ int Evaluate(char * tablefile, char * sequencefile){
   }
   else{
     // file evaluation passes all test cases
-    fprintf(stdout, "1, ");
+    fprintf(stdout, "1,");
     fseek(binarySequence, 0, SEEK_SET);
 
     // re-reads the rows and columns of the binary file
@@ -85,10 +85,25 @@ int Evaluate(char * tablefile, char * sequencefile){
   short column; // column index
   int index = 0;
 
+  short * start = malloc(sizeof(*start) * 2);
+  short * end = malloc(sizeof(*end) * 2);
+
   while(index < length){
     fread(&(row), sizeof(short), 1, binarySequence);
     fread(&(column), sizeof(short), 1, binarySequence);
     sequence[index++] = table[row][column];
+
+    // assigns the index positions of the start in the sequence
+    if(index - 1 == 0){
+      start[0] = row;
+      start[1] = column;
+    }
+
+    // assigns the index positions of the end in the sequence
+    if(index - 1 == length - 1){
+      end[0] = row;
+      end[1] = column;
+    }
   }
 
   // checks if the sequence is strictly increasing or not
@@ -96,20 +111,31 @@ int Evaluate(char * tablefile, char * sequencefile){
 
   // if the sequence is strictly increasing, print 1
   if(strictlyIncreasingValue){
-    fprintf(stdout, "1, ");
+    fprintf(stdout, "1,");
   }
   // if the sequence is not strictly increasing, print 0
   else{
-    fprintf(stdout, "0, ");
+    fprintf(stdout, "0,");
   }
 
+  int maxStart = maximalStart(table, start, rows, columns); // determines if the starting position is the maximal starting spot
+  int maxEnd = maximalEnd(table, end, rows, columns); // determines if the ending position is the maximal ending position
 
 
+  if(maxStart == 0 || maxEnd == 0){
+    fprintf(stdout, "0\n");
+  }
+  else{
+    fprintf(stdout, "1\n");
+  }
 
   // frees all space allocated for each column for all rows in the table
   for(lcv = 0; lcv < rows; lcv++){ 
     free(table[lcv]);
   }  
+ 
+  free(start); // frees the index positions of the start in the sequence
+  free(end); // frees the index positions of the end in the sequence
 
   free(table); // frees allocated memory from table
   free(sequence); // frees allocated memory from sequence
@@ -133,4 +159,54 @@ int strictlyIncreasing(short sequence[], int length){
   }   
  
   return result; // returns result of where it is strictly increasing or not
+}
+
+int maximalStart(short ** table, short * start, short rows, short columns){
+  // check around the position given
+  // if any of the numbers is less than the position, return 0
+
+  // assignment of row and column of the starting position
+  short row = start[0];
+  short column = start[1];  
+
+  if(row + 1 < rows && table[row + 1][column] < table[row][column])
+    return 0;
+
+  if(row - 1 >= 0 && table[row - 1][column] < table[row][column]) 
+    return 0;
+
+  if(column + 1 < columns && table[row][column + 1] < table[row][column]) 
+    return 0;
+
+  if(column - 1 >= 0 && table[row][column - 1] < table[row][column]){ 
+    return 0;
+  }
+  
+  // if the start is the maximal start then return 1
+  return 1;
+}
+
+int maximalEnd(short ** table, short * end, short rows, short columns){
+  // check around the position given
+  // if any of the numbers is greater than the position, return 0
+
+  // assignment of row and column of the ending position
+  short row = end[0];
+  short column = end[1];  
+
+  if(row + 1 < rows && table[row + 1][column] > table[row][column])
+    return 0;
+
+  if(row - 1 >= 0 && table[row - 1][column] > table[row][column]) 
+    return 0;
+
+  if(column + 1 < columns && table[row][column + 1] > table[row][column]) 
+    return 0;
+
+  if(column - 1 >= 0 && table[row][column - 1] > table[row][column]){ 
+    return 0;
+  }
+  
+  // if the start is the maximal start then return 1
+  return 1;
 }
