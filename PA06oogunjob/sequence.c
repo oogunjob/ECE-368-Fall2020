@@ -98,6 +98,9 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
   findPath(table, sequenceRow, sequenceColumn, sequenceRow[0], sequenceColumn[0], rows, columns, 1, length);
 
+
+  fwrite(&(length), sizeof(int), 1, sequenceFile); // writes the length of the path to the file
+
   // prints the path with row and columns to the output file
   for(int count = 0; count < length; count++){
     fwrite(&(sequenceRow[count]), sizeof(short), 1, sequenceFile);
@@ -109,8 +112,6 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
   free(sequenceRow);
   free(sequenceColumn);
   
-  fwrite(&(length), sizeof(int), 1, sequenceFile); // writes the length of the path to the file
-
   // frees all space allocated for each column for all rows in the table
   for(lcv = 0; lcv < rows; lcv++){ 
     free(table[lcv]);
