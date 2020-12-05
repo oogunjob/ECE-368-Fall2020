@@ -7,11 +7,13 @@ int Evaluate(char * tablefile, char * sequencefile){
   FILE * binaryTable = fopen(tablefile, "rb"); // opens the binary table file
   FILE * binarySequence = fopen(sequencefile, "rb"); // opens the sequence file
 
+  int returnNeeded = 1; // if return is needed, answer is 1, if not answer is 0
+
   // evaluation of the binary table file
   if(binaryTable == NULL){
     // if the file cannot be opened, print -1 to standard output
-    fprintf(stdout, "-1"); // *COME BACK TO THIS
-    // need to return back to main program
+    fprintf(stdout, "-1,");
+    returnNeeded = 1;
   }
 
   short rows; // number of rows in the table
@@ -23,7 +25,9 @@ int Evaluate(char * tablefile, char * sequencefile){
   // computes the size of the binary table file
   fseek(binaryTable, 0, SEEK_END); // moves to the end of the file
   if(ftell(binaryTable) != (2 + rows * columns) * sizeof(short)){
-    fprintf(stdout, "0"); // COME BACK TO THIS
+    fprintf(stdout, "0,");
+    returnNeeded = 1;
+    fclose(binaryTable);
   }
   else{
     // file evaluation passes all test cases
@@ -38,8 +42,8 @@ int Evaluate(char * tablefile, char * sequencefile){
   // evaluation of the binary table file
   if(binarySequence == NULL){
     // if the file cannot be opened, print -1 to standard output
-    fprintf(stdout, "-1"); // *COME BACK TO THIS
-    // need to return back to main program
+    fprintf(stdout, "-1,0,0\n");
+    return 0;
   }
 
   int length; // the length of the longest strictly increasing sequence
@@ -49,7 +53,8 @@ int Evaluate(char * tablefile, char * sequencefile){
   // computes the size of the binary sequence file
   fseek(binarySequence, 0, SEEK_END); // moves to the end of the file
   if(ftell(binarySequence) != (sizeof(int) + 2 * length * sizeof(short))){
-    fprintf(stdout, "0"); // COME BACK TO THIS
+    fprintf(stdout, "-1,0,0\n");
+    return 0;
   }
   else{
     // file evaluation passes all test cases
@@ -59,6 +64,11 @@ int Evaluate(char * tablefile, char * sequencefile){
     // re-reads the rows and columns of the binary file
     fread(&length, sizeof(int), 1, binarySequence);
   } 
+
+  if(returnNeeded == 0){
+    fprintf(stdout, "0,0\n");
+    return 0;
+  }
 
   // creates the table from the binary table
   short ** table;
