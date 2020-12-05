@@ -7,7 +7,7 @@ int Evaluate(char * tablefile, char * sequencefile){
   FILE * binaryTable = fopen(tablefile, "rb"); // opens the binary table file
   FILE * binarySequence = fopen(sequencefile, "rb"); // opens the sequence file
 
-  int returnNeeded = 1; // if return is needed, answer is 1, if not answer is 0
+  int returnNeeded = 0; // if return is needed, answer is 1, if not answer is 0
 
   // evaluation of the binary table file
   if(binaryTable == NULL){
@@ -19,30 +19,38 @@ int Evaluate(char * tablefile, char * sequencefile){
   short rows; // number of rows in the table
   short columns; // number of columns in the table
 
-  fread(&rows, sizeof(short), 1, binaryTable); // reads the number of rows from file
-  fread(&columns, sizeof(short), 1, binaryTable); // reads the number of columns from file
+  if(returnNeeded == 0){
+    fread(&rows, sizeof(short), 1, binaryTable); // reads the number of rows from file
+    fread(&columns, sizeof(short), 1, binaryTable); // reads the number of columns from file
 
-  // computes the size of the binary table file
-  fseek(binaryTable, 0, SEEK_END); // moves to the end of the file
-  if(ftell(binaryTable) != (2 + rows * columns) * sizeof(short)){
-    fprintf(stdout, "0,");
-    returnNeeded = 1;
-    fclose(binaryTable);
+    // computes the size of the binary table file
+    fseek(binaryTable, 0, SEEK_END); // moves to the end of the file
+    if(ftell(binaryTable) != (2 + rows * columns) * sizeof(short)){
+      fprintf(stdout, "0,");
+      returnNeeded = 1;
+      fclose(binaryTable);
+    }
+    else{
+      // file evaluation passes all test cases
+      fprintf(stdout, "1,");
+      fseek(binaryTable, 0, SEEK_SET);
+
+      // re-reads the rows and columns of the binary file
+      fread(&rows, sizeof(short), 1, binaryTable);
+      fread(&columns, sizeof(short), 1, binaryTable);
+    }
   }
-  else{
-    // file evaluation passes all test cases
-    fprintf(stdout, "1,");
-    fseek(binaryTable, 0, SEEK_SET);
 
-    // re-reads the rows and columns of the binary file
-    fread(&rows, sizeof(short), 1, binaryTable);
-    fread(&columns, sizeof(short), 1, binaryTable);
-  }
-
-  // evaluation of the binary table file
+  // evaluation of the binary sequence file
   if(binarySequence == NULL){
     // if the file cannot be opened, print -1 to standard output
     fprintf(stdout, "-1,0,0\n");
+    
+    // closes the binary table file due to memory allocation
+    if(binaryTable != NULL){
+      fclose(binaryTable);
+    }
+
     return 0;
   }
 
@@ -54,6 +62,12 @@ int Evaluate(char * tablefile, char * sequencefile){
   fseek(binarySequence, 0, SEEK_END); // moves to the end of the file
   if(ftell(binarySequence) != (sizeof(int) + 2 * length * sizeof(short))){
     fprintf(stdout, "-1,0,0\n");
+    fclose(binarySequence); 
+
+    if(binaryTable != NULL){
+      fclose(binaryTable);
+    }
+
     return 0;
   }
   else{
@@ -65,8 +79,9 @@ int Evaluate(char * tablefile, char * sequencefile){
     fread(&length, sizeof(int), 1, binarySequence);
   } 
 
-  if(returnNeeded == 0){
+  if(returnNeeded == 1){
     fprintf(stdout, "0,0\n");
+    fclose(binarySequence);
     return 0;
   }
 

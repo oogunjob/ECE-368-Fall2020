@@ -14,11 +14,12 @@ int main(int argc, char * * argv){
       fprintf(stderr, "ERROR: Failure occured during opening of files.\n");
       return EXIT_FAILURE;
     }
+
+    return EXIT_SUCCESS; // returns EXIT_SUCCESS
   }
     
-
   //  Evaluating strictly increasing sequence
-  if((strcmp("-e", argv[1])) == 0){
+  else if((strcmp("-e", argv[1])) == 0){
     
     // ./pa6 -e binary table file sequence file
     
@@ -47,7 +48,6 @@ int main(int argc, char * * argv){
     // If the sequence file corresponds to a maximal strictly increasing sequence, the fourth integer is 1
     // otherwise, it is 0.
 
-
     int evaluation = Evaluate(argv[2], argv[3]);
 
     // if the evaluation isn't equal to 1, return EXIT_FAILURE
@@ -55,8 +55,11 @@ int main(int argc, char * * argv){
       fprintf(stderr, "ERROR: Failure occured during opening of files.\n");
       return EXIT_FAILURE;
     }
-
+    return EXIT_SUCCESS; // returns EXIT_SUCCESS
   }
 
-  return EXIT_SUCCESS;
+  else{
+    fprintf(stderr, "ERROR: Invalid argv[1] argument passed.\n");
+    return EXIT_FAILURE;
+  }
 }

@@ -98,7 +98,6 @@ int findSequence(char * tablefile, char * tabletextfile, char * sequencefile){
 
   findPath(table, sequenceRow, sequenceColumn, sequenceRow[0], sequenceColumn[0], rows, columns, 1, length);
 
-
   fwrite(&(length), sizeof(int), 1, sequenceFile); // writes the length of the path to the file
 
   // prints the path with row and columns to the output file
